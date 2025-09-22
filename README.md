@@ -1,17 +1,14 @@
-# Calculadora de IMC
+# Sistema de Gestión de Ventas
 
 ## 📌 Descripción
 
-Aplicación que permite calcular el Índice de Masa Corporal (IMC) a partir del peso y la altura del usuario.  
-El sistema indica en qué rango se encuentra la persona (bajo peso, normal, sobrepeso, obesidad).
+Aplicación que permite la gestión de ventas internas para productos
 
 ## 🎯 Alcance
 
-- Ingreso de datos básicos (peso y altura).
-- Cálculo automático del IMC con la fórmula:
-  - $\text{IMC} = \frac{\text{peso}} {\text{altura}^2}$.
-- Clasificación de resultados según la OMS.
-- API que expone los cálculos para el frontend.
+- Gestión de Productos
+- Gestión de Marcas
+- Gestión de Líneas de Marcas
 
 ## 📌 Requisitos previos
 
@@ -27,8 +24,8 @@ El sistema indica en qué rango se encuentra la persona (bajo peso, normal, sobr
 ## ⚒️ Instalación
 
 ```bash
-git clone https://github.com/AGKL-Team/2025_proyecto1_back_imc
-cd ./2025_proyecto1_back_imc
+git clone git@github.com:AGKL-Team/AGKL-Sales.git
+cd ./AGKL-Sales
 yarn install
 ```
 
