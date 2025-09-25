@@ -1,8 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Audithory } from '../interfaces/audithory';
 import { Line } from './line';
 
 @Entity('brands')
-export class Brand {
+export class Brand implements Audithory {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,6 +15,19 @@ export class Brand {
 
   @OneToMany(() => Line, (line) => line.brand)
   lines: Line[];
+
+  @Column('timestamptz')
+  createdAt: Date;
+  @Column('uuid')
+  createdBy: string;
+  @Column('timestamptz', { nullable: true })
+  updatedAt: Date | null;
+  @Column('uuid', { nullable: true })
+  updatedBy: string | null;
+  @Column('timestamptz', { nullable: true })
+  deletedAt: Date | null;
+  @Column('uuid', { nullable: true })
+  deletedBy: string | null;
 
   addLine(line: Line): void {
     if (!this.lines) {
