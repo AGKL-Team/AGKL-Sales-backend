@@ -7,4 +7,6 @@ export interface BrandRepository {
   save(brand: Brand, userId: string): Promise<Brand>;
   update(brand: Brand, userId: string): Promise<Brand>;
   delete(id: number, userId: string): Promise<void>;
+
+  nameIsDuplicated(name: string): Promise<boolean>;
 }

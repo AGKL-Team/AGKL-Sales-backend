@@ -47,4 +47,12 @@ export class Brand implements Audithory {
 
     this.lines = this.lines.filter((l) => l.id !== line.id);
   }
+
+  static create(name: string, description: string): Brand {
+    const brand = new Brand();
+    brand.name = name;
+    brand.description = description;
+
+    return brand;
+  }
 }

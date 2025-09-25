@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Line } from 'module/products/domain/models/line';
 import { IsNull, Repository } from 'typeorm';
@@ -47,7 +47,7 @@ export class LineService implements LineRepository {
     const line = await this.findById(id);
 
     if (!line) {
-      throw new BadRequestException('No se encuentra la Línea');
+      throw new NotFoundException('No se encuentra la Línea');
     }
 
     line.deletedAt = new Date();

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { Brand } from '../../domain/models/brand';
@@ -46,12 +46,20 @@ export class BrandService implements BrandRepository {
     const brand = await this.findById(id);
 
     if (!brand) {
-      throw new BadRequestException('No se encuentra la Marca');
+      throw new NotFoundException('No se encuentra la Marca');
     }
 
     brand.deletedAt = new Date();
     brand.deletedBy = userId;
 
     await this.update(brand, userId);
+  }
+
+  async nameIsDuplicated(name: string) {
+    return await this.brandRepository.findOne({
+      where: {
+        name,
+      },
+    });
   }
 }

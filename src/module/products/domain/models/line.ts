@@ -38,4 +38,10 @@ export class Line implements Audithory {
   deletedAt: Date | null;
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
+
+  static create(name: string): Line {
+    const line = new Line();
+    line.name = name;
+    return line;
+  }
 }
