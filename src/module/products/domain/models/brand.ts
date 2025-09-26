@@ -55,4 +55,12 @@ export class Brand implements Audithory {
 
     return brand;
   }
+
+  changeName(name: string) {
+    this.name = name;
+  }
+
+  changeDescription(description: string) {
+    this.description = description;
+  }
 }

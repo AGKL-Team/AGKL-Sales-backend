@@ -39,4 +39,16 @@ export class ProductImage implements Audithory {
   deletedAt: Date | null;
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
+
+  /**
+   * Factory method to create a ProductImage from a file and userId
+   * @param file - The image file to be associated with the product
+   * @param userId - The ID of the user performing the operation
+   * @returns A new instance of ProductImage
+   */
+  static create(file: Express.Multer.File): ProductImage {
+    const image = new ProductImage();
+    image.url = file.path;
+    return image;
+  }
 }

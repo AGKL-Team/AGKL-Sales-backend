@@ -39,6 +39,19 @@ export class Line implements Audithory {
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
 
+  /**
+   * Changes the name of the line.
+   * @param name - The new name for the line.
+   */
+  changeName(name: string) {
+    this.name = name;
+  }
+
+  /**
+   * Factory method to create a new Line instance.
+   * @param name - The name of the line.
+   * @returns A new instance of Line.
+   */
   static create(name: string): Line {
     const line = new Line();
     line.name = name;

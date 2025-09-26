@@ -20,13 +20,19 @@ export class LineService implements LineRepository {
     });
   }
 
-  async findById(id: number): Promise<Line | null> {
-    return await this.lineRepository.findOne({
+  async findById(id: number): Promise<Line> {
+    const line = await this.lineRepository.findOne({
       where: {
         id,
         deletedAt: IsNull(),
       },
     });
+
+    if (!line) {
+      throw new NotFoundException('No se encuentra la Línea');
+    }
+
+    return line;
   }
 
   async save(line: Line, userId: string): Promise<Line> {
@@ -53,6 +59,20 @@ export class LineService implements LineRepository {
     line.deletedAt = new Date();
     line.deletedBy = userId;
 
-    await this.update(line, userId);
+    await this.lineRepository.save(line);
+  }
+
+  async alreadyExistsLineByBrand(
+    name: string,
+    brandId: number,
+  ): Promise<boolean> {
+    const line = await this.lineRepository.findOne({
+      where: {
+        name,
+        brandId,
+        deletedAt: IsNull(),
+      },
+    });
+    return !!line;
   }
 }

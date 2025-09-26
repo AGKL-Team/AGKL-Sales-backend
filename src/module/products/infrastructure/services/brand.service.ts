@@ -8,38 +8,44 @@ import { BrandRepository } from '../../domain/repositories/brandRepository';
 export class BrandService implements BrandRepository {
   constructor(
     @InjectRepository(Brand)
-    private readonly brandRepository: Repository<Brand>,
+    private readonly repository: Repository<Brand>,
   ) {}
 
   findAll(): Promise<Brand[]> {
-    return this.brandRepository.find({
+    return this.repository.find({
       where: {
         deletedAt: IsNull(),
       },
     });
   }
 
-  findById(brandId: number): Promise<Brand | null> {
-    return this.brandRepository.findOne({
+  async findById(brandId: number): Promise<Brand> {
+    const brand = await this.repository.findOne({
       where: {
         id: brandId,
         deletedAt: IsNull(),
       },
     });
+
+    if (!brand) {
+      throw new NotFoundException('No se encontró la marca');
+    }
+
+    return brand;
   }
 
   async save(brand: Brand, userId: string): Promise<Brand> {
     brand.createdAt = new Date();
     brand.createdBy = userId;
 
-    return await this.brandRepository.save(brand);
+    return await this.repository.save(brand);
   }
 
   async update(brand: Brand, userId: string): Promise<Brand> {
     brand.updatedAt = new Date();
     brand.updatedBy = userId;
 
-    return await this.brandRepository.save(brand);
+    return await this.repository.save(brand);
   }
 
   async delete(id: number, userId: string): Promise<void> {
@@ -52,14 +58,16 @@ export class BrandService implements BrandRepository {
     brand.deletedAt = new Date();
     brand.deletedBy = userId;
 
-    await this.update(brand, userId);
+    await this.repository.save(brand);
   }
 
-  async nameIsDuplicated(name: string) {
-    return await this.brandRepository.findOne({
+  async nameIsDuplicated(name: string): Promise<boolean> {
+    const brand = await this.repository.findOne({
       where: {
         name,
       },
     });
+
+    return !!brand;
   }
 }

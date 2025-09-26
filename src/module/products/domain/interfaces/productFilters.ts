@@ -1,8 +1,13 @@
 export interface ProductFilters {
-  categoryId?: string;
-  brandId?: string;
-  lineId?: string;
   name?: string;
+
+  categoryId?: number;
+  brandId?: number;
+  lineId?: number;
+
   page?: number;
   size?: number;
+
+  minPrice?: number;
+  maxPrice?: number;
 }
