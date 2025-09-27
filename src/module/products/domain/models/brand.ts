@@ -13,6 +13,9 @@ export class Brand implements Audithory {
   @Column('varchar', { length: 100, nullable: true })
   description: string;
 
+  @Column('varchar', { length: 255, nullable: false })
+  logo: string;
+
   @OneToMany(() => Line, (line) => line.brand)
   lines: Line[];
 
@@ -34,7 +37,9 @@ export class Brand implements Audithory {
       this.lines = [];
     }
 
-    if (!this.lines.find((l) => l.id === line.id)) {
+    if (
+      !this.lines.find((l) => l.name.toLowerCase() === line.name.toLowerCase())
+    ) {
       this.lines.push(line);
       line.brand = this;
     }
@@ -48,10 +53,11 @@ export class Brand implements Audithory {
     this.lines = this.lines.filter((l) => l.id !== line.id);
   }
 
-  static create(name: string, description: string): Brand {
+  static create(name: string, logo: string, description?: string): Brand {
     const brand = new Brand();
     brand.name = name;
-    brand.description = description;
+    brand.logo = logo;
+    brand.description = description ?? '';
 
     return brand;
   }

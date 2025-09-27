@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Line } from 'module/products/domain/models/line';
 import { IsNull, Repository } from 'typeorm';
 import { LineRepository } from '../../domain/repositories/lineRepository';
+import { Line } from '..//../domain/models/line';
 
 @Injectable()
 export class LineService implements LineRepository {
