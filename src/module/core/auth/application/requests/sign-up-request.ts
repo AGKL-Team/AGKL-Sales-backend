@@ -1,11 +1,8 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsStrongPassword,
-  Max,
   MaxLength,
-  Min,
   MinLength,
 } from 'class-validator';
 
@@ -32,16 +29,6 @@ export class SignUpRequest {
   @MinLength(8)
   @MaxLength(16)
   confirmPassword: string;
-
-  /** The user's height in meters. */
-  @IsNotEmpty()
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 2 },
-    { message: 'Height must be a number with up to 2 decimal places' },
-  )
-  @Min(0.1, { message: 'Height must be at least 0.1 meters' })
-  @Max(3, { message: 'Height must be at most 3 meters' })
-  height: number;
 
   /** Additional options for the sign-up process. */
   options?: {

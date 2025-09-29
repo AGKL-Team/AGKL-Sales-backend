@@ -5,7 +5,7 @@ import { ConfigurationModule } from '../../config/configuration.module';
 import { DatabaseModule } from '../database/database.module';
 import { SupabaseService } from '../database/services/supabase.service';
 import { Account } from './domain/models/account';
-import { SupabaseAuthGuard } from './infrastructure/guard/supbase-auth.guard';
+import { SupabaseAuthGuard } from './infrastructure/guard/supabase-auth.guard';
 import { AuthService } from './infrastructure/services/auth.service';
 import { AuthController } from './presentation/api/auth.controller';
 

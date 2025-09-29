@@ -24,8 +24,8 @@ Aplicación que permite la gestión de ventas internas para productos
 ## ⚒️ Instalación
 
 ```bash
-git clone git@github.com:AGKL-Team/AGKL-Sales.git
-cd ./AGKL-Sales
+git clone git@github.com:AGKL-Team/AGKL-Sales-backend.git
+cd ./AGKL-Sales-backend
 yarn install
 ```
 
