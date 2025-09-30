@@ -99,8 +99,8 @@ export class ProductService implements ProductRepository {
     product.updatedBy = userId;
 
     // 3. Handle new image files
-    // ! Only receive the new images to add, not the full list
-    // ! The existing images are only url's
+    // Only receive the new images to add, not the full list
+    // TODO: check how to validate the old images to differentiate them from the new ones
     if (files && files.length > 0) {
       const newImages = files.map((file) => {
         const { secure_url, public_id } = file;
