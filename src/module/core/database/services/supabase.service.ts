@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthError, createClient, SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseConfig } from '../../../config/supabase.config';
+import { SupabaseConfig } from '../../../../config/supabase.config';
 
 @Injectable()
 export class SupabaseService {

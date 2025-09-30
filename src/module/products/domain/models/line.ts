@@ -5,12 +5,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Audithory } from '../interfaces/audithory';
+import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 import { Brand } from './brand';
 import { Product } from './product';
 
 @Entity('lines')
-export class Line implements Audithory {
+export class Line implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
 

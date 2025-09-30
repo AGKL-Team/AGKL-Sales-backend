@@ -1,4 +1,4 @@
-export interface Audithory {
+export interface Auditory {
   createdAt: Date;
   createdBy: string;
   updatedAt: Date | null;

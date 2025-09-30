@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Audithory } from '../interfaces/audithory';
+import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 
 @Entity('product_categories')
-export class Category implements Audithory {
+export class Category implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
 

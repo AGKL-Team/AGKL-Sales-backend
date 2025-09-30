@@ -1,9 +1,9 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Audithory } from '../interfaces/audithory';
+import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 import { Product } from './product';
 
 @Entity('product_images')
-export class ProductImage implements Audithory {
+export class ProductImage implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,8 +15,11 @@ export class ProductImage implements Audithory {
   })
   product: Product;
 
-  @Column('varchar', { length: 500 })
+  @Column('varchar', { length: 1000 })
   url: string;
+
+  @Column('varchar', { length: 150 })
+  imageId: string;
 
   @Column('varchar', { length: 255, nullable: true })
   altText: string | null;
@@ -42,13 +45,27 @@ export class ProductImage implements Audithory {
 
   /**
    * Factory method to create a ProductImage from a file and userId
-   * @param file - The image file to be associated with the product
-   * @param userId - The ID of the user performing the operation
+   * @param imageUrl - URL of the uploaded image
+   * @param imageId - ID of the uploaded image in the storage service
+   * @param altText - Alternative text for the image
+   * @param order - Order of the image
+   * @param isPrimary - Whether this image is the primary image
    * @returns A new instance of ProductImage
    */
-  static create(file: Express.Multer.File): ProductImage {
+  static create(
+    imageUrl: string,
+    imageId: string,
+    altText: string,
+    order: number = 1,
+    isPrimary: boolean = false,
+  ): ProductImage {
     const image = new ProductImage();
-    image.url = file.path;
+    image.url = imageUrl;
+    image.imageId = imageId;
+    image.altText = altText || null;
+    image.order = order;
+    image.isPrimary = isPrimary;
+
     return image;
   }
 }

@@ -5,14 +5,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Audithory } from '../interfaces/audithory';
+import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 import { Brand } from './brand';
 import { Category } from './category';
 import { Line } from './line';
 import { ProductImage } from './productImages';
 
 @Entity('products')
-export class Product implements Audithory {
+export class Product implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -111,18 +111,32 @@ export class Product implements Audithory {
     return this.stock >= sellQuantity;
   }
 
-  addImage(imageUrl: string, altText?: string, order?: number) {
+  /**
+   *  Add an image to the product
+   * @param imageUrl Url of the image
+   * @param imageId  ID of the image
+   * @param altText Alternative text for the image
+   * @param order Order of the image
+   */
+  addImage(
+    imageUrl: string,
+    imageId: string,
+    altText?: string,
+    order?: number,
+  ) {
     if (!this.images) {
       this.images = [];
     }
 
-    const productImage = new ProductImage();
-    productImage.url = imageUrl;
-    productImage.altText = altText || null;
-    productImage.order = order || this.images.length;
-    productImage.isPrimary = this.images.length === 0;
+    const newImage = ProductImage.create(
+      imageUrl,
+      imageId,
+      altText || '',
+      order,
+      this.images.length === 0,
+    );
 
-    this.images.push(productImage);
+    this.images.push(newImage);
   }
 
   removeImage(imageUrl: string) {

@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from '../auth/auth.module';
-import { DatabaseModule } from '../database/database.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
+import { AuthModule } from '../core/auth/auth.module';
+import { DatabaseModule } from '../core/database/database.module';
 import { Brand } from './domain/models/brand';
 import { Category } from './domain/models/category';
 import { Line } from './domain/models/line';
@@ -20,9 +21,11 @@ import { ProductModuleUseCases } from './providers/productUseCasesProvider';
     TypeOrmModule.forFeature([Brand, Line, Product, ProductImage, Category]),
     DatabaseModule,
     AuthModule,
+    CloudinaryModule,
   ],
   controllers: [BrandController, LineController],
   providers: [
+    Logger,
     BrandService,
     LineService,
     ProductService,

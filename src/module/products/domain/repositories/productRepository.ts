@@ -1,3 +1,4 @@
+import { UploadApiResponse } from 'cloudinary';
 import { ProductFilters } from '../interfaces/productFilters';
 import { Product } from '../models/product';
 
@@ -25,7 +26,7 @@ export interface ProductRepository {
    */
   save(
     product: Product,
-    files: Express.Multer.File[],
+    files: UploadApiResponse[],
     userId: string,
   ): Promise<void>;
 
@@ -38,7 +39,7 @@ export interface ProductRepository {
    */
   update(
     product: Product,
-    files: Express.Multer.File[],
+    files: UploadApiResponse[],
     userId: string,
   ): Promise<void>;
 
