@@ -68,10 +68,18 @@ export class Brand implements Auditory {
 
   /**
    * Change the logo of the brand
-   * @param logo New logo URL for the brand
+   * @param logoUrl New logo URL for the brand
    */
-  changeLogo(logo: string): void {
-    this.logoUrl = logo;
+  changeLogoUrl(logoUrl: string): void {
+    this.logoUrl = logoUrl;
+  }
+
+  /**
+   * Change the logo ID of the brand
+   * @param logoId New logo ID for the brand
+   */
+  changeLogoId(logoId: string): void {
+    this.logoId = logoId;
   }
 
   /**
