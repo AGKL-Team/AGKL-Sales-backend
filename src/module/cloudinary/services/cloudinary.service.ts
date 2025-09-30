@@ -11,13 +11,13 @@ export class CloudinaryService {
       const stream = this.cloudinary.uploader.upload_stream(
         { folder: 'agkl-sales' },
         (error, result) => {
-          // ! If there is an error, reject the promise
+          // If there is an error, reject the promise
           if (error)
             return reject(
               new Error('Error uploading file to Cloudinary: ' + error.message),
             );
 
-          // ! If there is no result, reject the promise
+          // If there is no result, reject the promise
           if (!result) return reject(new Error('No result from Cloudinary'));
 
           // Otherwise, resolve the promise with the result
