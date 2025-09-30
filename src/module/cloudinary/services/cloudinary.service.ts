@@ -6,7 +6,6 @@ export class CloudinaryService {
   constructor(@Inject('CLOUDINARY') private cloudinary: typeof Cloudinary) {}
 
   async uploadImage(image: Express.Multer.File): Promise<UploadApiResponse> {
-    // folder: 'agkl-sales',
     return new Promise((resolve, reject) => {
       const stream = this.cloudinary.uploader.upload_stream(
         { folder: 'agkl-sales' },
