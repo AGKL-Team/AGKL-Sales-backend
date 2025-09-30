@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UploadApiResponse } from 'cloudinary';
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { ProductFilters } from '../../domain/interfaces/productFilters';
 import { Product } from '../../domain/models/product';
@@ -53,7 +54,7 @@ export class ProductService implements ProductRepository {
 
   async save(
     product: Product,
-    files: Express.Multer.File[],
+    files: UploadApiResponse[],
     userId: string,
   ): Promise<void> {
     // 1. Set audit fields
@@ -62,8 +63,17 @@ export class ProductService implements ProductRepository {
 
     // 2. Handle image files
     if (files && files.length > 0) {
-      product.images = files.map((file) => {
-        const image = ProductImage.create(file);
+      product.images = files.map((file, index) => {
+        const { secure_url, public_id } = file;
+        const isPrimary = index === 0;
+
+        const image = ProductImage.create(
+          secure_url,
+          public_id,
+          '',
+          index + 1,
+          isPrimary,
+        );
 
         image.createdAt = new Date();
         image.createdBy = userId;
@@ -78,7 +88,7 @@ export class ProductService implements ProductRepository {
 
   async update(
     product: Product,
-    files: Express.Multer.File[],
+    files: UploadApiResponse[],
     userId: string,
   ): Promise<void> {
     // 1. Ensure the product exists
@@ -89,9 +99,23 @@ export class ProductService implements ProductRepository {
     product.updatedBy = userId;
 
     // 3. Handle new image files
+    // Only receive the new images to add, not the full list
+    // TODO: check how to validate the old images to differentiate them from the new ones
     if (files && files.length > 0) {
-      const newImages = files.map((file) => {
-        const image = ProductImage.create(file);
+      const newImages = files.map((file, index) => {
+        const { secure_url, public_id } = file;
+        const altText = '';
+        // Order continues from existing images
+        const order = product.images.length + index + 1;
+        const isPrimary = false;
+
+        const image = ProductImage.create(
+          secure_url,
+          public_id,
+          altText,
+          order,
+          isPrimary,
+        );
 
         image.createdAt = new Date();
         image.createdBy = userId;

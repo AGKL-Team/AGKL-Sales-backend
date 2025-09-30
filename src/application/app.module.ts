@@ -6,8 +6,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from 'module/products/product.module';
 import { ConfigurationModule } from '../config/configuration.module';
-import { AuthModule } from '../module/auth/auth.module';
-import { DatabaseModule } from '../module/database/database.module';
+import { AuthModule } from '../module/core/auth/auth.module';
+import { DatabaseModule } from '../module/core/database/database.module';
 
 @Module({
   imports: [

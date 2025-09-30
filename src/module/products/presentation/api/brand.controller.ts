@@ -8,16 +8,20 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
 import { UpdateBrandRequest } from 'module/products/application/requests/updateBrandRequest';
 import { UpdateBrandUseCase } from 'module/products/application/useCases/updateBrandUseCase';
-import { UserFromRequest } from '../../../auth/infrastructure/decorators/user.decorator';
+import { memoryStorage } from 'multer';
+import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { CreateBrandRequest } from '../../application/requests/createBrandRequest';
 import { CreateBrandUseCase } from '../../application/useCases/createBrandUseCase';
-import { SupabaseAuthGuard } from './../../../auth/infrastructure/guard/supbase-auth.guard';
+import { SupabaseAuthGuard } from './../../../core/auth/infrastructure/guard/supabase-auth.guard';
 import { BrandService } from './../../infrastructure/services/brand.service';
 
 @Controller('brands')
@@ -51,11 +55,17 @@ export class BrandController {
   @Post('')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SupabaseAuthGuard)
+  @UseInterceptors(FileInterceptor('logo', { storage: memoryStorage() }))
   async save(
     @Body(ValidationPipe) request: CreateBrandRequest,
+    @UploadedFile() logo: Express.Multer.File,
     @UserFromRequest() user: User,
   ) {
-    return await this.createBrand.execute(request, user.id);
+    if (!logo) {
+      throw new BadRequestException('El logo es obligatorio');
+    }
+
+    return await this.createBrand.execute(request, logo, user.id);
   }
 
   @Put(':id')

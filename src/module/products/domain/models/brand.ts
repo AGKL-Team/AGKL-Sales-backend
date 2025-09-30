@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Audithory } from '../interfaces/audithory';
+import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 import { Line } from './line';
 
 @Entity('brands')
-export class Brand implements Audithory {
+export class Brand implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,8 +13,11 @@ export class Brand implements Audithory {
   @Column('varchar', { length: 100, nullable: true })
   description: string;
 
-  @Column('varchar', { length: 255, nullable: false })
-  logo: string;
+  @Column('varchar', { length: 1000, nullable: false })
+  logoUrl: string;
+
+  @Column('varchar', { length: 150, nullable: false })
+  logoId: string;
 
   @OneToMany(() => Line, (line) => line.brand)
   lines: Line[];
@@ -32,6 +35,57 @@ export class Brand implements Audithory {
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
 
+  static create(
+    name: string,
+    logoUrl: string,
+    logoId: string,
+    description?: string,
+  ): Brand {
+    const brand = new Brand();
+    brand.name = name;
+    brand.logoUrl = logoUrl;
+    brand.logoId = logoId;
+    brand.description = description ?? '';
+
+    return brand;
+  }
+
+  /**
+   * Change the name of the brand
+   * @param name New name for the brand
+   */
+  changeName(name: string): void {
+    this.name = name;
+  }
+
+  /**
+   * Change the description of the brand
+   * @param description New description for the brand
+   */
+  changeDescription(description: string): void {
+    this.description = description;
+  }
+
+  /**
+   * Change the logo of the brand
+   * @param logoUrl New logo URL for the brand
+   */
+  changeLogoUrl(logoUrl: string): void {
+    this.logoUrl = logoUrl;
+  }
+
+  /**
+   * Change the logo ID of the brand
+   * @param logoId New logo ID for the brand
+   */
+  changeLogoId(logoId: string): void {
+    this.logoId = logoId;
+  }
+
+  /**
+   * Add a line to the brand
+   * @param line Line to be added to the brand
+   */
   addLine(line: Line): void {
     if (!this.lines) {
       this.lines = [];
@@ -45,28 +99,15 @@ export class Brand implements Audithory {
     }
   }
 
+  /**
+   * Remove a line from the brand
+   * @param line Line to be removed from the brand
+   */
   removeLine(line: Line): void {
     if (!this.lines) {
       return;
     }
 
     this.lines = this.lines.filter((l) => l.id !== line.id);
-  }
-
-  static create(name: string, logo: string, description?: string): Brand {
-    const brand = new Brand();
-    brand.name = name;
-    brand.logo = logo;
-    brand.description = description ?? '';
-
-    return brand;
-  }
-
-  changeName(name: string) {
-    this.name = name;
-  }
-
-  changeDescription(description: string) {
-    this.description = description;
   }
 }

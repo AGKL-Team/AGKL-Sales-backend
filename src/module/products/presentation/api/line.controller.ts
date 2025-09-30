@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import { User } from '@supabase/supabase-js';
 import { UpdateLineUseCase } from 'module/products/application/useCases/updateLineUseCase';
-import { UserFromRequest } from '../../../auth/infrastructure/decorators/user.decorator';
-import { SupabaseAuthGuard } from '../../../auth/infrastructure/guard/supbase-auth.guard';
+import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
+import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
 import { CreateLineRequest } from '../../application/requests/createLineRequest';
 import { CreateLineUseCase } from '../../application/useCases/createLineUseCase';
 import { LineService } from '../../infrastructure/services/line.service';

@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configSchema } from './config.schema';
-import frontentConfig from './frontent.config';
+import frontendConfig from './frontend.config';
 import supabaseConfig from './supabase.config';
+import cloudinaryConfig from './cloudinary.config';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import supabaseConfig from './supabase.config';
       isGlobal: true,
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       envFilePath: '.env',
-      load: [frontentConfig, supabaseConfig],
+      load: [frontendConfig, supabaseConfig, cloudinaryConfig],
       validationSchema: configSchema,
     }),
   ],
