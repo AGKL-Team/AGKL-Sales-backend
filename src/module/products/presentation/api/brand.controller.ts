@@ -61,6 +61,10 @@ export class BrandController {
     @UploadedFile() logo: Express.Multer.File,
     @UserFromRequest() user: User,
   ) {
+    if (!logo) {
+      throw new BadRequestException('El logo es obligatorio');
+    }
+
     return await this.createBrand.execute(request, logo, user.id);
   }
 
