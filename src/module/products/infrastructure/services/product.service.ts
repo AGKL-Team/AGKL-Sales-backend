@@ -102,10 +102,20 @@ export class ProductService implements ProductRepository {
     // Only receive the new images to add, not the full list
     // TODO: check how to validate the old images to differentiate them from the new ones
     if (files && files.length > 0) {
-      const newImages = files.map((file) => {
+      const newImages = files.map((file, index) => {
         const { secure_url, public_id } = file;
+        const altText = '';
+        // Order continues from existing images
+        const order = product.images.length + index + 1;
+        const isPrimary = false;
 
-        const image = ProductImage.create(secure_url, public_id, '', 0, false);
+        const image = ProductImage.create(
+          secure_url,
+          public_id,
+          altText,
+          order,
+          isPrimary,
+        );
 
         image.createdAt = new Date();
         image.createdBy = userId;
