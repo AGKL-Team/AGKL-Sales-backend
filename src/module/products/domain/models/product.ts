@@ -8,7 +8,6 @@ import {
 import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
 import { Brand } from './brand';
 import { Category } from './category';
-import { Line } from './line';
 import { ProductImage } from './productImages';
 
 @Entity('products')
@@ -28,9 +27,6 @@ export class Product implements Auditory {
   @Column('int', { nullable: true })
   lineId: number | null;
 
-  @ManyToOne(() => Line, (line) => line.id, { nullable: true })
-  line: Line | null;
-
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
     eager: false,
@@ -43,11 +39,11 @@ export class Product implements Auditory {
   @Column('decimal', { precision: 8, scale: 2 })
   stock: number;
 
-  @Column('int')
-  categoryId: number;
+  @Column('int', { nullable: true })
+  categoryId: number | null;
 
-  @ManyToOne(() => Category, (category) => category.id)
-  category: Category;
+  @ManyToOne(() => Category, (category) => category.id, { nullable: true })
+  category: Category | null;
 
   @Column('timestamptz')
   createdAt: Date;
@@ -74,32 +70,34 @@ export class Product implements Auditory {
   }
 
   /**
-   * Assign a line to the product
-   * @param line the line to assign
-   * @throws Error if the line doesn't belong to the same brand as the product
+   * Assign a category to the product
+   * @param category the category to assign
+   * @throws Error if the category doesn't belong to the same brand as the product
    */
-  assignLine(line: Line): void {
-    if (line.brandId !== this.brandId) {
-      throw new Error('The line must belong to the same brand as the product');
+  assignCategory(category: Category): void {
+    if (category.brandId !== this.brandId) {
+      throw new Error(
+        'The category must belong to the same brand as the product',
+      );
     }
-    this.line = line;
-    this.lineId = line.id;
+    this.category = category;
+    this.categoryId = category.id;
   }
 
   /**
-   * Remove the line assignment from the product
+   * Remove the category assignment from the product
    */
-  removeLine(): void {
-    this.line = null;
-    this.lineId = null;
+  removeCategory(): void {
+    this.category = null;
+    this.categoryId = null;
   }
 
   /**
-   * Check if the product has a line assigned
-   * @returns true if the product has a line, false otherwise
+   * Check if the product has a category assigned
+   * @returns true if the product has a category, false otherwise
    */
-  hasLine(): boolean {
-    return this.line !== null && this.lineId !== null;
+  hasCategory(): boolean {
+    return this.category !== null && this.categoryId !== null;
   }
 
   /**

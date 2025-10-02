@@ -15,10 +15,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
-import { UpdateBrandRequest } from 'module/products/application/requests/updateBrandRequest';
-import { UpdateBrandUseCase } from 'module/products/application/useCases/updateBrandUseCase';
 import { memoryStorage } from 'multer';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
+import { UpdateBrandRequest } from '../../../products/application/requests/updateBrandRequest';
+import { UpdateBrandUseCase } from '../../../products/application/useCases/updateBrandUseCase';
 import { CreateBrandRequest } from '../../application/requests/createBrandRequest';
 import { CreateBrandUseCase } from '../../application/useCases/createBrandUseCase';
 import { SupabaseAuthGuard } from './../../../core/auth/infrastructure/guard/supabase-auth.guard';

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,19 +11,19 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { User } from '@supabase/supabase-js';
-import { UpdateLineUseCase } from 'module/products/application/useCases/updateLineUseCase';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
-import { CreateLineRequest } from '../../application/requests/createLineRequest';
-import { CreateLineUseCase } from '../../application/useCases/createLineUseCase';
-import { LineService } from '../../infrastructure/services/line.service';
+import { CreateCategoryRequest } from '../../application/requests/createCategoryRequest';
+import { CreateCategory } from '../../application/useCases/createCategoryUseCase';
+import { UpdateCategory } from '../../application/useCases/updateCategoryUseCase';
+import { CategoryService } from '../../infrastructure/services/category.service';
 
-@Controller('lines')
-export class LineController {
+@Controller('categories')
+export class CategoryController {
   constructor(
-    private readonly service: LineService,
-    private readonly createLine: CreateLineUseCase,
-    private readonly updateLine: UpdateLineUseCase,
+    private readonly service: CategoryService,
+    private readonly createCategory: CreateCategory,
+    private readonly updateCategory: UpdateCategory,
   ) {}
 
   @Get('brand/:brandId')
@@ -49,16 +48,11 @@ export class LineController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SupabaseAuthGuard)
   async save(
-    @Body(ValidationPipe) request: CreateLineRequest,
+    @Body(ValidationPipe) request: CreateCategoryRequest,
     @UserFromRequest() user: User,
   ) {
     const { name, brandId } = request;
-
-    if (!brandId) {
-      throw new BadRequestException('El ID de la marca es obligatorio');
-    }
-
-    return await this.createLine.execute({ name, brandId }, user.id);
+    return await this.createCategory.execute({ name, brandId }, user.id);
   }
 
   @Patch(':id')
@@ -69,6 +63,6 @@ export class LineController {
     @Body(ValidationPipe) name: string,
     @UserFromRequest() user: User,
   ) {
-    return await this.updateLine.execute(id, name, user.id);
+    return await this.updateCategory.execute(id, name, user.id);
   }
 }

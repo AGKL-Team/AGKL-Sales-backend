@@ -1,12 +1,10 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { SignInWithPasswordCredentials } from '@supabase/supabase-js';
-import { UpdateHeightRequest } from 'module/auth/application/requests/update-height-request';
-import { SignInRequest } from '../../src/module/auth/application/requests/sign-in-request';
-import { SignUpRequest } from '../../src/module/auth/application/requests/sign-up-request';
-import { AuthService } from '../../src/module/auth/infrastructure/services/auth.service';
-import { AuthController } from '../../src/module/auth/presentation/api/auth.controller';
-import { fakeApplicationUser } from '../shared/fakes/user.fake';
+import { SignInRequest } from '../../src/module/core/auth/application/requests/sign-in-request';
+import { SignUpRequest } from '../../src/module/core/auth/application/requests/sign-up-request';
+import { AuthService } from '../../src/module/core/auth/infrastructure/services/auth.service';
+import { AuthController } from '../../src/module/core/auth/presentation/api/auth.controller';
 import { ConfigTestProvider } from '../shared/providers/config-test.provider';
 import { SupabaseTestProvider } from '../shared/providers/supabase-config-test.provider';
 
@@ -42,209 +40,189 @@ describe('AuthController', () => {
   });
 
   // ======= SIGN IN =======
-  it('should sign in a user with valid credentials and return user data with a token', async () => {
-    const request: SignInWithPasswordCredentials = {
-      email: 'test@gmail.com',
-      password: 'MyStrongPassword123',
-    };
+  describe('signIn', () => {
+    it('should sign in a user with valid credentials and return user data with a token', async () => {
+      const request: SignInWithPasswordCredentials = {
+        email: 'test@gmail.com',
+        password: 'MyStrongPassword123',
+      };
 
-    jest.spyOn(service, 'signIn').mockResolvedValue({
-      access_token: '',
-      expires_in: 3600,
+      jest.spyOn(service, 'signIn').mockResolvedValue({
+        access_token: '',
+        expires_in: 3600,
+      });
+
+      const result = await controller.signIn(request);
+
+      expect(result).toEqual({
+        access_token: '',
+        expires_in: 3600,
+      });
+      expect(service.signIn).toHaveBeenCalledWith(request);
     });
 
-    const result = await controller.signIn(request);
+    it('should sign in a user with invalid credentials and return an error', async () => {
+      const request: SignInWithPasswordCredentials = {
+        email: 'test@gmail.com',
+        password: 'WrongPassword',
+      };
 
-    expect(result).toEqual({
-      access_token: '',
-      expires_in: 3600,
-    });
-    expect(service.signIn).toHaveBeenCalledWith(request);
-  });
+      jest
+        .spyOn(service, 'signIn')
+        .mockRejectedValue(new Error('Invalid credentials'));
 
-  it('should sign in a user with invalid credentials and return an error', async () => {
-    const request: SignInWithPasswordCredentials = {
-      email: 'test@gmail.com',
-      password: 'WrongPassword',
-    };
-
-    jest
-      .spyOn(service, 'signIn')
-      .mockRejectedValue(new Error('Invalid credentials'));
-
-    await expect(controller.signIn(request)).rejects.toThrow(
-      'Invalid credentials',
-    );
-    expect(service.signIn).toHaveBeenCalledWith(request);
-  });
-
-  it('should handle sign in with missing fields and return a validation error', async () => {
-    const invalidRequest: SignInWithPasswordCredentials = {
-      email: 'WrongEmail',
-      password: 'SomePassword',
-    };
-
-    const validationPipe = new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
+      await expect(controller.signIn(request)).rejects.toThrow(
+        'Invalid credentials',
+      );
+      expect(service.signIn).toHaveBeenCalledWith(request);
     });
 
-    await expect(
-      validationPipe.transform(invalidRequest, {
-        type: 'body',
-        metatype: SignInRequest,
-      }),
-    ).rejects.toThrow(BadRequestException);
+    it('should handle sign in with missing fields and return a validation error', async () => {
+      const invalidRequest: SignInWithPasswordCredentials = {
+        email: 'WrongEmail',
+        password: 'SomePassword',
+      };
 
-    expect(service.signIn).not.toHaveBeenCalled();
-  });
+      const validationPipe = new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
 
-  it('should handle sign in with an unextisting email and return an error', async () => {
-    // Arrange
-    const request: SignInWithPasswordCredentials = {
-      email: 'test@gmail.com',
-      password: 'MyStrongPassword123',
-    };
+      await expect(
+        validationPipe.transform(invalidRequest, {
+          type: 'body',
+          metatype: SignInRequest,
+        }),
+      ).rejects.toThrow(BadRequestException);
 
-    jest
-      .spyOn(service, 'signIn')
-      .mockRejectedValue(new Error('User not found'));
+      expect(service.signIn).not.toHaveBeenCalled();
+    });
 
-    // Act
-    const result = controller.signIn(request);
+    it('should handle sign in with an unextisting email and return an error', async () => {
+      // Arrange
+      const request: SignInWithPasswordCredentials = {
+        email: 'test@gmail.com',
+        password: 'MyStrongPassword123',
+      };
 
-    // Assert
-    await expect(result).rejects.toThrow('User not found');
-    expect(service.signIn).toHaveBeenCalledWith(request);
+      jest
+        .spyOn(service, 'signIn')
+        .mockRejectedValue(new Error('User not found'));
+
+      // Act
+      const result = controller.signIn(request);
+
+      // Assert
+      await expect(result).rejects.toThrow('User not found');
+      expect(service.signIn).toHaveBeenCalledWith(request);
+    });
   });
 
   // ======= SIGN OUT =======
-  it('should sign out the currently authenticated user', async () => {
-    // Arrange
-    jest.spyOn(service, 'signOut').mockResolvedValue({} as any);
+  describe('signOut', () => {
+    it('should sign out the currently authenticated user', async () => {
+      // Arrange
+      jest.spyOn(service, 'signOut').mockResolvedValue({} as any);
 
-    // Act
-    const result = await controller.signOut();
+      // Act
+      const result = await controller.signOut();
 
-    // Assert
-    expect(result).toEqual({} as any);
-    expect(service.signOut).toHaveBeenCalled();
-  });
+      // Assert
+      expect(result).toEqual({} as any);
+      expect(service.signOut).toHaveBeenCalled();
+    });
 
-  it('should handle sign out when no user is authenticated', async () => {
-    // Arrange
-    jest
-      .spyOn(service, 'signOut')
-      .mockRejectedValue(new Error('No user authenticated'));
+    it('should handle sign out when no user is authenticated', async () => {
+      // Arrange
+      jest
+        .spyOn(service, 'signOut')
+        .mockRejectedValue(new Error('No user authenticated'));
 
-    // Act
-    const result = controller.signOut();
+      // Act
+      const result = controller.signOut();
 
-    // Assert
-    await expect(result).rejects.toThrow('No user authenticated');
-    expect(service.signOut).toHaveBeenCalled();
-  });
+      // Assert
+      await expect(result).rejects.toThrow('No user authenticated');
+      expect(service.signOut).toHaveBeenCalled();
+    });
 
-  it('should handle sign out with expired tokens and return an error', async () => {
-    // Arrange
-    jest
-      .spyOn(service, 'signOut')
-      .mockRejectedValue(new Error('Token expired'));
+    it('should handle sign out with expired tokens and return an error', async () => {
+      // Arrange
+      jest
+        .spyOn(service, 'signOut')
+        .mockRejectedValue(new Error('Token expired'));
 
-    // Act
-    const result = controller.signOut();
+      // Act
+      const result = controller.signOut();
 
-    // Assert
-    await expect(result).rejects.toThrow('Token expired');
-    expect(service.signOut).toHaveBeenCalled();
+      // Assert
+      await expect(result).rejects.toThrow('Token expired');
+      expect(service.signOut).toHaveBeenCalled();
+    });
   });
 
   // ======= SIGN UP =======
-  it('should sign up a new user and return user data with a token', async () => {
-    // Arrange
-    const request: SignUpRequest = {
-      email: 'test@gmail.com',
-      password: 'MyStrongPassword123',
-      confirmPassword: 'MyStrongPassword123',
-      height: 1.72,
-    };
+  describe('signUp', () => {
+    it('should sign up a new user and return user data with a token', async () => {
+      // Arrange
+      const request: SignUpRequest = {
+        email: 'test@gmail.com',
+        password: 'MyStrongPassword123',
+        confirmPassword: 'MyStrongPassword123',
+      };
 
-    jest.spyOn(service, 'signUp').mockResolvedValue({} as any);
+      jest.spyOn(service, 'signUp').mockResolvedValue({} as any);
 
-    // Act
-    const result = await controller.signUp(request);
+      // Act
+      const result = await controller.signUp(request);
 
-    // Assert
-    expect(result).toEqual({} as any);
-    expect(service.signUp).toHaveBeenCalledWith(request);
-  });
-
-  it('should handle sign up with an already registered email and return an error', async () => {
-    // Arrange
-    const request: SignUpRequest = {
-      email: 'test@gmail.com',
-      password: 'MyStrongPassword123',
-      confirmPassword: 'MyStrongPassword123',
-      height: 1.72,
-    };
-
-    jest
-      .spyOn(service, 'signUp')
-      .mockRejectedValue(new Error('User already exists'));
-
-    // Act
-    const result = controller.signUp(request);
-
-    // Assert
-    await expect(result).rejects.toThrow('User already exists');
-    expect(service.signUp).toHaveBeenCalledWith(request);
-  });
-
-  it('should handle sign up when the password is too weak and return a validation error', async () => {
-    // Arrange
-    const request: SignUpRequest = {
-      email: 'test@gmail.com',
-      password: 'weak',
-      confirmPassword: 'weak',
-      height: 1.72,
-    };
-
-    const validationPipe = new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
+      // Assert
+      expect(result).toEqual({} as any);
+      expect(service.signUp).toHaveBeenCalledWith(request);
     });
 
-    // Act
-    const result = validationPipe.transform(request, {
-      type: 'body',
-      metatype: SignUpRequest,
+    it('should handle sign up with an already registered email and return an error', async () => {
+      // Arrange
+      const request: SignUpRequest = {
+        email: 'test@gmail.com',
+        password: 'MyStrongPassword123',
+        confirmPassword: 'MyStrongPassword123',
+      };
+
+      jest
+        .spyOn(service, 'signUp')
+        .mockRejectedValue(new Error('User already exists'));
+
+      // Act
+      const result = controller.signUp(request);
+
+      // Assert
+      await expect(result).rejects.toThrow('User already exists');
+      expect(service.signUp).toHaveBeenCalledWith(request);
     });
 
-    // Assert
-    await expect(result).rejects.toThrow(BadRequestException);
-    expect(service.signUp).not.toHaveBeenCalled();
-  });
+    it('should handle sign up when the password is too weak and return a validation error', async () => {
+      // Arrange
+      const request: SignUpRequest = {
+        email: 'test@gmail.com',
+        password: 'weak',
+        confirmPassword: 'weak',
+      };
 
-  // ======= UPDATE HEIGHT =======
-  it('should update user height successfully', async () => {
-    // Arrange
-    const request: UpdateHeightRequest = {
-      height: 1.8,
-    };
+      const validationPipe = new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
 
-    jest.spyOn(service, 'updateHeight').mockResolvedValue({} as any);
+      // Act
+      const result = validationPipe.transform(request, {
+        type: 'body',
+        metatype: SignUpRequest,
+      });
 
-    // Act
-    const result = await service.updateHeight(
-      fakeApplicationUser,
-      request.height,
-    );
-
-    // Assert
-    expect(result).toEqual({});
-    expect(service.updateHeight).toHaveBeenCalledWith(
-      fakeApplicationUser,
-      request.height,
-    );
+      // Assert
+      await expect(result).rejects.toThrow(BadRequestException);
+      expect(service.signUp).not.toHaveBeenCalled();
+    });
   });
 });

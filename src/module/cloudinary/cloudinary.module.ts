@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
-import cloudinaryConfig from 'config/cloudinary.config';
+import cloudinaryConfig from '../../config/cloudinary.config';
 import { CloudinaryService } from './services/cloudinary.service';
 
 @Module({

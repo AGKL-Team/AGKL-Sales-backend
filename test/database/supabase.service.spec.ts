@@ -1,7 +1,7 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthError } from '@supabase/supabase-js';
-import { SupabaseService } from '../../src/module/database/services/supabase.service';
+import { SupabaseService } from '../../src/module/core/database/services/supabase.service';
 import { ConfigTestProvider } from '../shared/providers/config-test.provider';
 import { SupabaseTestProvider } from '../shared/providers/supabase-config-test.provider';
 

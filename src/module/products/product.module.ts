@@ -5,29 +5,26 @@ import { AuthModule } from '../core/auth/auth.module';
 import { DatabaseModule } from '../core/database/database.module';
 import { Brand } from './domain/models/brand';
 import { Category } from './domain/models/category';
-import { Line } from './domain/models/line';
 import { Product } from './domain/models/product';
 import { ProductImage } from './domain/models/productImages';
 import { BrandService } from './infrastructure/services/brand.service';
 import { CategoryService } from './infrastructure/services/category.service';
-import { LineService } from './infrastructure/services/line.service';
 import { ProductService } from './infrastructure/services/product.service';
 import { BrandController } from './presentation/api/brand.controller';
-import { LineController } from './presentation/api/line.controller';
+import { CategoryController } from './presentation/api/category.controller';
 import { ProductModuleUseCases } from './providers/productUseCasesProvider';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Brand, Line, Product, ProductImage, Category]),
+    TypeOrmModule.forFeature([Brand, Product, ProductImage, Category]),
     DatabaseModule,
     AuthModule,
     CloudinaryModule,
   ],
-  controllers: [BrandController, LineController],
+  controllers: [BrandController, CategoryController],
   providers: [
     Logger,
     BrandService,
-    LineService,
     ProductService,
     CategoryService,
     ...ProductModuleUseCases,

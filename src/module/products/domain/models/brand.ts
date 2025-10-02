@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
-import { Line } from './line';
+import { Category } from './category';
 
 @Entity('brands')
 export class Brand implements Auditory {
@@ -19,8 +19,8 @@ export class Brand implements Auditory {
   @Column('varchar', { length: 150, nullable: false })
   logoId: string;
 
-  @OneToMany(() => Line, (line) => line.brand)
-  lines: Line[];
+  @OneToMany(() => Category, (category) => category.brand)
+  categories: Category[];
 
   @Column('timestamptz')
   createdAt: Date;
@@ -83,31 +83,33 @@ export class Brand implements Auditory {
   }
 
   /**
-   * Add a line to the brand
-   * @param line Line to be added to the brand
+   * Add a category to the brand
+   * @param category category to be added to the brand
    */
-  addLine(line: Line): void {
-    if (!this.lines) {
-      this.lines = [];
+  addCategory(category: Category): void {
+    if (!this.categories) {
+      this.categories = [];
     }
 
     if (
-      !this.lines.find((l) => l.name.toLowerCase() === line.name.toLowerCase())
+      !this.categories.find(
+        (c) => c.name.toLowerCase() === category.name.toLowerCase(),
+      )
     ) {
-      this.lines.push(line);
-      line.brand = this;
+      this.categories.push(category);
+      category.brand = this;
     }
   }
 
   /**
-   * Remove a line from the brand
-   * @param line Line to be removed from the brand
+   * Remove a category from the brand
+   * @param category Category to be removed from the brand
    */
-  removeLine(line: Line): void {
-    if (!this.lines) {
+  removeCategory(category: Category): void {
+    if (!this.categories) {
       return;
     }
 
-    this.lines = this.lines.filter((l) => l.id !== line.id);
+    this.categories = this.categories.filter((c) => c.id !== category.id);
   }
 }

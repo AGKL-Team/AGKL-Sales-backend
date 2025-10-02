@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nestjs/common';
-import { extractUser } from '../../src/module/auth/infrastructure/decorators/user.decorator';
+import { extractUser } from '../../src/module/core/auth/infrastructure/decorators/user.decorator';
 import { fakeApplicationUser } from '../shared/fakes/user.fake';
 
 describe('extractUser', () => {

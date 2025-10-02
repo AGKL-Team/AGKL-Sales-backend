@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
+import { Brand } from './brand';
 
 @Entity('product_categories')
 export class Category implements Auditory {
@@ -8,6 +9,12 @@ export class Category implements Auditory {
 
   @Column('varchar', { length: 50 })
   name: string;
+
+  @Column('int')
+  brandId: number;
+
+  @ManyToOne(() => Brand, (brand) => brand.categories)
+  brand: Brand;
 
   @Column('timestamptz')
   createdAt: Date;
@@ -21,4 +28,23 @@ export class Category implements Auditory {
   deletedAt: Date | null;
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
+
+  /**
+   * Changes the category name
+   * @param name - new name for category
+   */
+  changeName(name: string) {
+    this.name = name;
+  }
+
+  /**
+   * Factory method to create an instance of Category
+   * @param name - name of category
+   */
+  static create(name: string) {
+    const category = new Category();
+    category.name = name;
+
+    return category;
+  }
 }
