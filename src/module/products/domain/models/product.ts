@@ -128,6 +128,7 @@ export class Product implements Auditory {
    * @param imageId  ID of the image
    * @param altText Alternative text for the image
    * @param order Order of the image
+   * @param isPrimary Whether the image is the primary image
    */
   addImage(
     imageUrl: string,
