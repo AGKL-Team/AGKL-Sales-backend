@@ -6,11 +6,11 @@ export class ProductFactory {
   /**
    * Creates a single product for testing purposes.
    */
-  static create(): Product {
+  static create(price?: number, stock?: number): Product {
     const product = Product.create(
-      `Product Test`,
-      randomInt(1, 99999),
-      randomInt(0, 99999),
+      `Test Product`,
+      price ?? randomInt(1, 99999),
+      stock ?? randomInt(0, 99999),
       fakeBrand,
       fakeCategory,
     );

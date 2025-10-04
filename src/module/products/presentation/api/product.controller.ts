@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
-import { CreateProduct } from 'module/products/application/useCases/createProductUseCase';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
 import { CreateProductRequest } from '../../application/requests/createProductRequest';
+import { CreateProduct } from './../../application/useCases/createProductUseCase';
 import { ProductService } from './../../infrastructure/services/product.service';
 
 @Controller('products')
