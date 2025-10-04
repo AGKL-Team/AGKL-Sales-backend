@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -64,5 +65,15 @@ export class CategoryController {
     @UserFromRequest() user: User,
   ) {
     return await this.updateCategory.execute(id, name, user.id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(SupabaseAuthGuard)
+  async delete(
+    @Param('id', new ValidationPipe({ transform: true })) id: number,
+    @UserFromRequest() user: User,
+  ) {
+    return await this.service.delete(id, user.id);
   }
 }

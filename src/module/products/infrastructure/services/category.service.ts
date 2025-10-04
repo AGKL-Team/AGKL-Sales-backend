@@ -54,6 +54,6 @@ export class CategoryService implements CategoryRepository {
       where: { name, brandId },
     });
 
-    return category;
+    return !!category;
   }
 }
