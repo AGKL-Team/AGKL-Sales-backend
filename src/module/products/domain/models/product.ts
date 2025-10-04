@@ -24,9 +24,6 @@ export class Product implements Auditory {
   @ManyToOne(() => Brand, (brand) => brand.id)
   brand: Brand;
 
-  @Column('int', { nullable: true })
-  lineId: number | null;
-
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
     eager: false,
@@ -57,9 +54,6 @@ export class Product implements Auditory {
   deletedAt: Date | null;
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
-
-  @Column('boolean', { default: false })
-  isDeleted: boolean;
 
   /**
    * Add a new price to the product
@@ -121,6 +115,7 @@ export class Product implements Auditory {
     imageId: string,
     altText?: string,
     order?: number,
+    isPrimary: boolean = false,
   ) {
     if (!this.images) {
       this.images = [];
@@ -131,12 +126,17 @@ export class Product implements Auditory {
       imageId,
       altText || '',
       order,
-      this.images.length === 0,
+      isPrimary,
     );
 
     this.images.push(newImage);
   }
 
+  /**
+   * Removes an image from the product
+   * @param imageUrl URL of the image to remove
+   * @returns void
+   */
   removeImage(imageUrl: string) {
     if (!this.images) {
       return;
@@ -156,6 +156,10 @@ export class Product implements Auditory {
     );
   }
 
+  /**
+   * Get all image URLs of the product
+   * @returns Array of image URLs
+   */
   getImageUrls(): string[] {
     if (!this.images) {
       return [];
@@ -164,5 +168,30 @@ export class Product implements Auditory {
       .filter((img) => !img.deletedAt)
       .sort((a, b) => a.order - b.order)
       .map((img) => img.url);
+  }
+
+  /**
+   * Factory method to create a new product instance
+   * @param name - Name of the product
+   * @param price - Price of the product
+   * @param stock - Initial stock of the product
+   * @param brand - Brand associated with the product
+   * @param category - (Optional) Category associated with the product
+   * @returns A new Product instance
+   */
+  static create(
+    name: string,
+    price: number,
+    stock: any,
+    brand: Brand,
+    category: Category | null,
+  ): Product {
+    const product = new Product();
+    product.name = name;
+    product.price = price;
+    product.stock = stock;
+    product.brand = brand;
+    if (category) product.category = category;
+    return product;
   }
 }
