@@ -6,7 +6,6 @@ import { CloudinaryModule } from '../../../src/module/cloudinary/cloudinary.modu
 import { CloudinaryService } from '../../../src/module/cloudinary/services/cloudinary.service';
 import { CreateBrandUseCase } from '../../../src/module/products/application/useCases/createBrandUseCase';
 import { Brand } from '../../../src/module/products/domain/models/brand';
-import { Line } from '../../../src/module/products/domain/models/line';
 import { BrandService } from '../../../src/module/products/infrastructure/services/brand.service';
 import { fakeImage } from '../../shared/fakes/image.fake';
 import { fakeApplicationUser } from '../../shared/fakes/user.fake';
@@ -32,10 +31,6 @@ describe('CreateBrandUseCase', () => {
         BrandService,
         {
           provide: getRepositoryToken(Brand),
-          useClass: Repository,
-        },
-        {
-          provide: getRepositoryToken(Line),
           useClass: Repository,
         },
         Logger,

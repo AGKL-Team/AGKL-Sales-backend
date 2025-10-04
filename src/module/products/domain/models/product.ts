@@ -182,7 +182,7 @@ export class Product implements Auditory {
   static create(
     name: string,
     price: number,
-    stock: any,
+    stock: number,
     brand: Brand,
     category: Category | null,
   ): Product {
@@ -192,6 +192,9 @@ export class Product implements Auditory {
     product.stock = stock;
     product.brand = brand;
     if (category) product.category = category;
+
+    product.images = [];
+
     return product;
   }
 }

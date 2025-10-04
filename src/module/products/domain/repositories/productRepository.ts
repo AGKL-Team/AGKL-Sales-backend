@@ -21,9 +21,9 @@ export interface ProductRepository {
    * Saves a new product.
    * @param product - Product entity to be saved
    * @param userId - Unique identifier of the user performing the action
-   * @returns Promise that resolves when the product is saved
+   * @returns Promise that resolves to the saved Product entity
    */
-  save(product: Product, userId: string): Promise<void>;
+  save(product: Product, userId: string): Promise<Product>;
 
   /**
    * Updates an existing product.

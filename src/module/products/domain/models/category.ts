@@ -40,10 +40,14 @@ export class Category implements Auditory {
   /**
    * Factory method to create an instance of Category
    * @param name - name of category
+   * @param brand - brand who contains the category
+   * @param id - category id
    */
-  static create(name: string) {
+  static create(name: string, brand: Brand, id?: number) {
     const category = new Category();
     category.name = name;
+    category.brand = brand;
+    if (id) category.id = id;
 
     return category;
   }
