@@ -22,7 +22,7 @@ export class CreateProductRequest {
   @IsString()
   @IsOptional()
   @MaxLength(255, {
-    message: 'La descripción no debe exceder los 200 caracteres',
+    message: 'La descripción no debe exceder los 255 caracteres',
   })
   description?: string;
 
