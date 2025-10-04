@@ -20,15 +20,10 @@ export interface ProductRepository {
   /**
    * Saves a new product.
    * @param product - Product entity to be saved
-   * @param files - Array of image files associated with the product
    * @param userId - Unique identifier of the user performing the action
-   * @returns Promise that resolves when the product is saved
+   * @returns Promise that resolves to the saved Product entity
    */
-  save(
-    product: Product,
-    files: UploadApiResponse[],
-    userId: string,
-  ): Promise<void>;
+  save(product: Product, userId: string): Promise<Product>;
 
   /**
    * Updates an existing product.
@@ -66,9 +61,9 @@ export interface ProductRepository {
   findAllByBrand(filters: ProductFilters): Promise<Product[]>;
 
   /**
-   * Fetches all products belonging to a specific line based on provided filters.
-   * @param filters - Object containing filter criteria
-   * @returns Promise that resolves to an array of Product entities
+   * Checks if a product with the given name already exists.
+   * @param name - product name
+   * @returns Promise that resolves to a boolean indicating if a product with the given name already exists
    */
-  findAllByLine(filters: ProductFilters): Promise<Product[]>;
+  alreadyExists(name: string): Promise<boolean>;
 }

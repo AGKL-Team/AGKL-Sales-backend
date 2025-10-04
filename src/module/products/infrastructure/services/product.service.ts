@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UploadApiResponse } from 'cloudinary';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { IsNull, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { ProductFilters } from '../../domain/interfaces/productFilters';
 import { Product } from '../../domain/models/product';
 import { ProductImage } from '../../domain/models/productImages';
@@ -12,8 +12,6 @@ export class ProductService implements ProductRepository {
   constructor(
     @InjectRepository(Product)
     private readonly repository: Repository<Product>,
-    @InjectRepository(ProductImage)
-    private readonly imageRepository: Repository<ProductImage>,
   ) {}
 
   async findAll(filters: ProductFilters): Promise<Product[]> {
@@ -34,7 +32,6 @@ export class ProductService implements ProductRepository {
         ...(filters.name && { name: filters.name }),
         ...(filters.categoryId && { categoryId: filters.categoryId }),
         ...(filters.brandId && { brandId: filters.brandId }),
-        ...(filters.lineId && { lineId: filters.lineId }),
         ...(filters.minPrice && { price: LessThanOrEqual(filters.minPrice) }),
         ...(filters.maxPrice && { price: MoreThanOrEqual(filters.maxPrice) }),
       },
@@ -52,29 +49,14 @@ export class ProductService implements ProductRepository {
     return product;
   }
 
-  async save(
-    product: Product,
-    files: UploadApiResponse[],
-    userId: string,
-  ): Promise<void> {
+  async save(product: Product, userId: string): Promise<Product> {
     // 1. Set audit fields
     product.createdAt = new Date();
     product.createdBy = userId;
 
     // 2. Handle image files
-    if (files && files.length > 0) {
-      product.images = files.map((file, index) => {
-        const { secure_url, public_id } = file;
-        const isPrimary = index === 0;
-
-        const image = ProductImage.create(
-          secure_url,
-          public_id,
-          '',
-          index + 1,
-          isPrimary,
-        );
-
+    if (product.images.length > 0) {
+      product.images = product.images.map((image) => {
         image.createdAt = new Date();
         image.createdBy = userId;
 
@@ -83,7 +65,7 @@ export class ProductService implements ProductRepository {
     }
 
     // 3. Save the product entity
-    await this.repository.save(product);
+    return await this.repository.save(product);
   }
 
   async update(
@@ -146,7 +128,9 @@ export class ProductService implements ProductRepository {
     return await this.findAll(filters);
   }
 
-  async findAllByLine(filters: ProductFilters): Promise<Product[]> {
-    return await this.findAll(filters);
+  async alreadyExists(name: string): Promise<boolean> {
+    return await this.repository.exists({
+      where: { name, deletedAt: IsNull() },
+    });
   }
 }

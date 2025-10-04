@@ -3,7 +3,6 @@ export interface ProductFilters {
 
   categoryId?: number;
   brandId?: number;
-  lineId?: number;
 
   page?: number;
   size?: number;

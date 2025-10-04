@@ -18,14 +18,14 @@ export class Product implements Auditory {
   @Column('varchar', { length: 50 })
   name: string;
 
+  @Column('varchar', { length: 255, default: '', nullable: true })
+  description: string;
+
   @Column('int')
   brandId: number;
 
   @ManyToOne(() => Brand, (brand) => brand.id)
   brand: Brand;
-
-  @Column('int', { nullable: true })
-  lineId: number | null;
 
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
     cascade: true,
@@ -58,8 +58,21 @@ export class Product implements Auditory {
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
 
-  @Column('boolean', { default: false })
-  isDeleted: boolean;
+  /**
+   * Change the name of the product
+   * @param name the new name of the product
+   */
+  changeName(name: string) {
+    this.name = name;
+  }
+
+  /**
+   * Change the description of the product
+   * @param description the new description of the product
+   */
+  changeDescription(description: string) {
+    this.description = description;
+  }
 
   /**
    * Add a new price to the product
@@ -115,12 +128,14 @@ export class Product implements Auditory {
    * @param imageId  ID of the image
    * @param altText Alternative text for the image
    * @param order Order of the image
+   * @param isPrimary Whether the image is the primary image
    */
   addImage(
     imageUrl: string,
     imageId: string,
     altText?: string,
     order?: number,
+    isPrimary: boolean = false,
   ) {
     if (!this.images) {
       this.images = [];
@@ -131,12 +146,17 @@ export class Product implements Auditory {
       imageId,
       altText || '',
       order,
-      this.images.length === 0,
+      isPrimary,
     );
 
     this.images.push(newImage);
   }
 
+  /**
+   * Removes an image from the product
+   * @param imageUrl URL of the image to remove
+   * @returns void
+   */
   removeImage(imageUrl: string) {
     if (!this.images) {
       return;
@@ -146,6 +166,10 @@ export class Product implements Auditory {
     );
   }
 
+  /**
+   * Get the primary image of the product
+   * @returns The primary image of the product or null if there are no images
+   */
   getPrimaryImage(): ProductImage | null {
     if (!this.images || this.images.length === 0) {
       return null;
@@ -156,6 +180,10 @@ export class Product implements Auditory {
     );
   }
 
+  /**
+   * Get all image URLs of the product
+   * @returns Array of image URLs
+   */
   getImageUrls(): string[] {
     if (!this.images) {
       return [];
@@ -164,5 +192,53 @@ export class Product implements Auditory {
       .filter((img) => !img.deletedAt)
       .sort((a, b) => a.order - b.order)
       .map((img) => img.url);
+  }
+
+  /**
+   * Increase the stock of the product
+   * @param quantity Quantity to increase the stock
+   */
+  increaseStock(quantity: number): void {
+    this.stock += quantity;
+  }
+
+  /**
+   * Decrease the stock of the product
+   * @param quantity Quantity to decrease from stock
+   * @throws Error if there is not enough stock to decrease
+   */
+  decreaseStock(quantity: number): void {
+    if (quantity > this.stock) {
+      throw new Error('Insufficient stock to decrease');
+    }
+    this.stock -= quantity;
+  }
+
+  /**
+   * Factory method to create a new product instance
+   * @param name - Name of the product
+   * @param price - Price of the product
+   * @param stock - Initial stock of the product
+   * @param brand - Brand associated with the product
+   * @param category - (Optional) Category associated with the product
+   * @returns A new Product instance
+   */
+  static create(
+    name: string,
+    price: number,
+    stock: number,
+    brand: Brand,
+    category: Category | null,
+  ): Product {
+    const product = new Product();
+    product.name = name;
+    product.price = price;
+    product.stock = stock;
+    product.brand = brand;
+    if (category) product.category = category;
+
+    product.images = [];
+
+    return product;
   }
 }

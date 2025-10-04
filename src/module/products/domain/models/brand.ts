@@ -40,12 +40,14 @@ export class Brand implements Auditory {
     logoUrl: string,
     logoId: string,
     description?: string,
+    id?: number,
   ): Brand {
     const brand = new Brand();
     brand.name = name;
     brand.logoUrl = logoUrl;
     brand.logoId = logoId;
     brand.description = description ?? '';
+    if (id) brand.id = id;
 
     return brand;
   }
