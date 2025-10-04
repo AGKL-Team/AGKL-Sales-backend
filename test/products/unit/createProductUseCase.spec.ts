@@ -528,7 +528,7 @@ describe('CreateProductUseCase', () => {
         expect(cloudinaryService.uploadImage).not.toHaveBeenCalled();
       });
 
-      it('should throw Error when almost one image cannot be uploaded', async () => {
+      it('should throw Error when at least one image cannot be uploaded', async () => {
         // Arrange
         const request = ValidCreateProductRequest();
         const quantityOfImages = randomInt(1, 5);
