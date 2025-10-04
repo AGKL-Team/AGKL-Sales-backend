@@ -11,6 +11,7 @@ import { CreateProductRequest } from './../../../src/module/products/application
 export const ValidCreateProductRequest: () => CreateProductRequest = () => {
   const request = new CreateProductRequest();
   request.name = 'Test Product';
+  request.description = 'This is a test product description';
   request.brandId = fakeBrand.id;
   request.price = randomInt(1, 9999);
   request.initialStock = 0;
@@ -27,6 +28,7 @@ export const ValidCreateProductRequestWithCategory: () => CreateProductRequest =
   () => {
     const request = new CreateProductRequest();
     request.name = 'Test Product';
+    request.description = 'This is a test product description';
     request.brandId = fakeBrand.id;
     request.categoryId = fakeCategory.id;
     request.price = randomInt(1, 9999);
@@ -44,6 +46,7 @@ export const ValidCreateProductRequestWithInitialStock: () => CreateProductReque
   () => {
     const request = new CreateProductRequest();
     request.name = 'Test Product';
+    request.description = 'This is a test product description';
     request.brandId = fakeBrand.id;
     request.price = randomInt(1, 9999);
     request.initialStock = randomInt(1, 100);

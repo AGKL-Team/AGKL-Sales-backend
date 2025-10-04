@@ -11,9 +11,20 @@ import {
 export class CreateProductRequest {
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(50)
+  @MinLength(3, {
+    message: 'El nombre del producto debe tener al menos 3 caracteres',
+  })
+  @MaxLength(50, {
+    message: 'El nombre del producto no debe exceder los 50 caracteres',
+  })
   name: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255, {
+    message: 'La descripción no debe exceder los 200 caracteres',
+  })
+  description?: string;
 
   @IsNumber()
   @IsNotEmpty()

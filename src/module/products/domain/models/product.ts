@@ -18,6 +18,9 @@ export class Product implements Auditory {
   @Column('varchar', { length: 50 })
   name: string;
 
+  @Column('varchar', { length: 255, default: '', nullable: true })
+  description: string;
+
   @Column('int')
   brandId: number;
 
@@ -54,6 +57,22 @@ export class Product implements Auditory {
   deletedAt: Date | null;
   @Column('uuid', { nullable: true })
   deletedBy: string | null;
+
+  /**
+   * Change the name of the product
+   * @param name the new name of the product
+   */
+  changeName(name: string) {
+    this.name = name;
+  }
+
+  /**
+   * Change the description of the product
+   * @param description the new description of the product
+   */
+  changeDescription(description: string) {
+    this.description = description;
+  }
 
   /**
    * Add a new price to the product
@@ -146,6 +165,10 @@ export class Product implements Auditory {
     );
   }
 
+  /**
+   * Get the primary image of the product
+   * @returns The primary image of the product or null if there are no images
+   */
   getPrimaryImage(): ProductImage | null {
     if (!this.images || this.images.length === 0) {
       return null;
@@ -168,6 +191,26 @@ export class Product implements Auditory {
       .filter((img) => !img.deletedAt)
       .sort((a, b) => a.order - b.order)
       .map((img) => img.url);
+  }
+
+  /**
+   * Increase the stock of the product
+   * @param quantity Quantity to increase the stock
+   */
+  increaseStock(quantity: number): void {
+    this.stock += quantity;
+  }
+
+  /**
+   * Decrease the stock of the product
+   * @param quantity Quantity to decrease from stock
+   * @throws Error if there is not enough stock to decrease
+   */
+  decreaseStock(quantity: number): void {
+    if (quantity > this.stock) {
+      throw new Error('Insufficient stock to decrease');
+    }
+    this.stock -= quantity;
   }
 
   /**
