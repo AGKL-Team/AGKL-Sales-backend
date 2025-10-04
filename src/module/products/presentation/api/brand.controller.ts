@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -15,10 +16,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
-import { UpdateBrandRequest } from 'module/products/application/requests/updateBrandRequest';
-import { UpdateBrandUseCase } from 'module/products/application/useCases/updateBrandUseCase';
 import { memoryStorage } from 'multer';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
+import { UpdateBrandRequest } from '../../../products/application/requests/updateBrandRequest';
+import { UpdateBrandUseCase } from '../../../products/application/useCases/updateBrandUseCase';
 import { CreateBrandRequest } from '../../application/requests/createBrandRequest';
 import { CreateBrandUseCase } from '../../application/useCases/createBrandUseCase';
 import { SupabaseAuthGuard } from './../../../core/auth/infrastructure/guard/supabase-auth.guard';
@@ -85,5 +86,18 @@ export class BrandController {
     const { name, description } = request;
 
     return await this.updateBrand.execute(brandId, user.id, name, description);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(SupabaseAuthGuard)
+  async delete(@Param('id') id: string, @UserFromRequest() user: User) {
+    const brandId: number = parseInt(id);
+
+    if (!brandId || isNaN(brandId)) {
+      throw new BadRequestException('Id inválido');
+    }
+
+    return await this.service.delete(brandId, user.id);
   }
 }

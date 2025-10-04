@@ -8,9 +8,10 @@ export interface CategoryRepository {
   findById(id: number): Promise<Category>;
 
   /**
-   * Finds all categories.
+   * Finds all categories for a specific brand.
+   * @param brandId - brand id
    */
-  findAll(): Promise<Category[]>;
+  findAllForBrand(brandId: number): Promise<Category[]>;
 
   /**
    * Creates a new category.
@@ -34,8 +35,9 @@ export interface CategoryRepository {
   delete(id: number, userId: string): Promise<void>;
 
   /**
-   * Checks if a category with the given name already exists.
+   * Checks if a category with the given name already exists in a brand.
    * @param name - category name
+   * @param brandId - brand id
    */
-  alreadyExists(name: string): Promise<boolean>;
+  alreadyExistsCategoryByBrand(name: string, brandId: number): Promise<boolean>;
 }
