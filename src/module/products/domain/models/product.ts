@@ -154,15 +154,16 @@ export class Product implements Auditory {
 
   /**
    * Removes an image from the product
-   * @param imageUrl URL of the image to remove
+   * @param imageId public ID of the image to remove
    * @returns void
    */
-  removeImage(imageUrl: string) {
+  removeImage(imageId: string) {
     if (!this.images) {
       return;
     }
+
     this.images = this.images.filter(
-      (img) => img.url !== imageUrl && !img.deletedAt,
+      (img) => img.imageId !== imageId && !img.deletedAt,
     );
   }
 

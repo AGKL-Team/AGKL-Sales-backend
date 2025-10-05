@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UploadApiResponse } from 'cloudinary';
 import { IsNull, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { ProductFilters } from '../../domain/interfaces/productFilters';
 import { Product } from '../../domain/models/product';
@@ -70,7 +69,7 @@ export class ProductService implements ProductRepository {
 
   async update(
     product: Product,
-    files: UploadApiResponse[],
+    images: ProductImage[],
     userId: string,
   ): Promise<void> {
     // 1. Ensure the product exists
@@ -81,19 +80,18 @@ export class ProductService implements ProductRepository {
     product.updatedBy = userId;
 
     // 3. Handle new image files
-    // Only receive the new images to add, not the full list
-    // TODO: check how to validate the old images to differentiate them from the new ones
-    if (files && files.length > 0) {
-      const newImages = files.map((file, index) => {
-        const { secure_url, public_id } = file;
+    if (images && images.length > 0) {
+      const newImages = images.map((file, index) => {
+        const { url, imageId } = file;
         const altText = '';
+
         // Order continues from existing images
         const order = product.images.length + index + 1;
         const isPrimary = false;
 
         const image = ProductImage.create(
-          secure_url,
-          public_id,
+          url,
+          imageId,
           altText,
           order,
           isPrimary,
@@ -104,6 +102,7 @@ export class ProductService implements ProductRepository {
 
         return image;
       });
+
       product.images = [...(product.images || []), ...newImages];
     }
 

@@ -1,6 +1,6 @@
-import { UploadApiResponse } from 'cloudinary';
 import { ProductFilters } from '../interfaces/productFilters';
 import { Product } from '../models/product';
+import { ProductImage } from './../models/productImages';
 
 export interface ProductRepository {
   /**
@@ -28,13 +28,13 @@ export interface ProductRepository {
   /**
    * Updates an existing product.
    * @param product - Product entity with updated information
-   * @param files - Array of new image files to be added to the product
+   * @param images - Array of new image files to be added to the product
    * @param userId - Unique identifier of the user performing the action
    * @returns Promise that resolves when the product is updated
    */
   update(
     product: Product,
-    files: UploadApiResponse[],
+    images: ProductImage[],
     userId: string,
   ): Promise<void>;
 
