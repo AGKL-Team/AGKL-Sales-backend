@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -13,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
+import { ProductFilters } from 'module/products/domain/interfaces/productFilters';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
 import { CreateProductRequest } from '../../application/requests/createProductRequest';
@@ -29,6 +32,12 @@ export class ProductController {
     private readonly createProduct: CreateProduct,
     private readonly updateProduct: UpdateProduct,
   ) {}
+
+  @Get('')
+  @HttpCode(HttpStatus.OK)
+  async findAll(@Query('request') request: ProductFilters) {
+    return this.productService.findAll(request);
+  }
 
   @Post('')
   @UseInterceptors(FilesInterceptor('images', 5))
