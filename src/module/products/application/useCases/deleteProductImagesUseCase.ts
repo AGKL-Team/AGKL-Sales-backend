@@ -1,16 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CloudinaryService } from 'module/cloudinary/services/cloudinary.service';
-import { ProductService } from 'module/products/infrastructure/services/product.service';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CloudinaryService } from './../../../cloudinary/services/cloudinary.service';
 import { ProductImage } from './../../domain/models/productImages';
+import { ProductService } from './../../infrastructure/services/product.service';
 
 @Injectable()
 export class DeleteProductImages {
   constructor(
     private readonly productService: ProductService,
     private readonly cloudinaryService: CloudinaryService,
-    private readonly imageRepository: Repository<ProductImage>,
     private readonly logger: Logger,
+    @InjectRepository(ProductImage)
+    private readonly imageRepository: Repository<ProductImage>,
   ) {}
 
   /**

@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Category } from 'module/products/domain/models/category';
 import { BrandService } from '../../infrastructure/services/brand.service';
 import { CategoryService } from '../../infrastructure/services/category.service';
 import { CreateCategoryRequest } from '../requests/createCategoryRequest';
+import { Category } from './../../domain/models/category';
 
 @Injectable()
 export class CreateCategory {
