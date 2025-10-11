@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -60,5 +61,14 @@ export class ProductController {
     @UserFromRequest() user: User,
   ) {
     await this.updateProduct.execute(productId, request, images, user.id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async delete(
+    @Param('id', new ValidationPipe({ transform: true })) productId: number,
+    @UserFromRequest() user: User,
+  ) {
+    await this.productService.delete(productId, user.id);
   }
 }
