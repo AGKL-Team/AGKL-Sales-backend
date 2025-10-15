@@ -41,7 +41,7 @@ export class UpdateProductRequest {
   categoryId?: number;
 
   /**
-   * List of URLs of images to be removed from the product
+   * List of public ID's of images to be removed from the product
    */
   @IsString({ each: true })
   @Optional()
