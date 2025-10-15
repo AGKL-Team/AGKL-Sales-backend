@@ -34,4 +34,9 @@ export interface SaleRepository {
    * @returns A promise that resolves to true if the product is associated with any sales, otherwise false.
    */
   isProductInSales(productId: number): Promise<boolean>;
+
+  /**
+   * Finds the next sale number
+   */
+  getNextNumber(): Promise<number>;
 }

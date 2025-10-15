@@ -1,5 +1,5 @@
 import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Auditory } from './../../../../../core/auth/domain/interfaces/auditory';
+import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
 import { Product } from './../../../products/domain/models/product';
 import { ProductSale } from './product-sale';
 
@@ -38,7 +38,7 @@ export class Sale implements Auditory {
    * @param quantity The quantity of the product to add.
    */
   addProduct(product: Product, quantity: number) {
-    const productSale = ProductSale.create(product, quantity, this);
+    const productSale = ProductSale.create(product, quantity);
     this.products.push(productSale);
   }
 
@@ -50,5 +50,16 @@ export class Sale implements Auditory {
     this.products = this.products.filter(
       (productSale) => productSale.productId !== productId,
     );
+  }
+
+  /**
+   * Factory method to create an instance of Sale
+   */
+  static create(number: number, date: Date): Sale {
+    const sale = new Sale();
+    sale.number = number;
+    sale.date = date;
+
+    return sale;
   }
 }

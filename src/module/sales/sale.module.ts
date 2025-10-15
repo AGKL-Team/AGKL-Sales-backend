@@ -4,7 +4,9 @@ import { AuthModule } from '../core/auth/auth.module';
 import { DatabaseModule } from '../core/database/database.module';
 import { ProductSale } from './domain/model/product-sale';
 import { Sale } from './domain/model/sale';
+import { SaleService } from './infrastructure/services/sale.service';
 import { SaleController } from './presentation/api/sale.controller';
+import { SaleModuleUseCases } from './providers/saleUseCasesProvider';
 
 @Module({
   imports: [
