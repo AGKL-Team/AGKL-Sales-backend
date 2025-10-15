@@ -53,8 +53,10 @@ export class DeleteProductImages {
     // 4. Remove images from the product entity
     imagesToDelete.forEach((img) => product.removeImage(img.imageId));
 
+    const imageIdsToDelete = imagesToDelete.map((img) => img.id);
+
     // 5. Update the product in the database
-    await this.imageRepository.delete(imagePublicIds);
+    await this.imageRepository.delete(imageIdsToDelete);
 
     this.logger.log(
       `Imágenes eliminadas del producto con ID ${productId} en la base de datos.`,
