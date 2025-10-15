@@ -1,5 +1,5 @@
 import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Auditory } from './../../../../../dist/src/module/core/auth/domain/interfaces/auditory.d';
+import { Auditory } from './../../../../../core/auth/domain/interfaces/auditory';
 import { Product } from './../../../products/domain/models/product';
 import { ProductSale } from './product-sale';
 
