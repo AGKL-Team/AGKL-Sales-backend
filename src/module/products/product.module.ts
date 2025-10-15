@@ -12,6 +12,7 @@ import { CategoryService } from './infrastructure/services/category.service';
 import { ProductService } from './infrastructure/services/product.service';
 import { BrandController } from './presentation/api/brand.controller';
 import { CategoryController } from './presentation/api/category.controller';
+import { ProductController } from './presentation/api/product.controller';
 import { ProductModuleUseCases } from './providers/productUseCasesProvider';
 
 @Module({
@@ -21,7 +22,7 @@ import { ProductModuleUseCases } from './providers/productUseCasesProvider';
     AuthModule,
     CloudinaryModule,
   ],
-  controllers: [BrandController, CategoryController],
+  controllers: [BrandController, CategoryController, ProductController],
   providers: [
     Logger,
     BrandService,
