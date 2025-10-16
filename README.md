@@ -68,6 +68,15 @@ vercel
 vercel --prod
 ```
 
+## </> Análisis de código estático
+
+Para generar el reporte de análisis de código estático utilizamos ESLint como herramienta junto a Prettier
+
+```bash
+# Generación del reporte en formato HTML
+npx eslint "./src/**/*.{ts,tsx}" --format html --output-file eslint-report.html
+```
+
 ## 👨‍💻 Autores
 
 - AGKL Team
