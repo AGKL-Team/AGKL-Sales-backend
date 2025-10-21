@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { SaleRepository } from '../../domain/repository/saleRepository';
 import { ProductSale } from './../../domain/model/product-sale';
@@ -11,7 +12,9 @@ import { Sale } from './../../domain/model/sale';
 @Injectable()
 export class SaleService implements SaleRepository {
   constructor(
+    @InjectRepository(Sale)
     private readonly repository: Repository<Sale>,
+    @InjectRepository(ProductSale)
     private readonly productSaleRepository: Repository<ProductSale>,
   ) {}
 

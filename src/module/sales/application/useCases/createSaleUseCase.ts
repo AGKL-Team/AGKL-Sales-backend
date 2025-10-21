@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Product } from '../../../products/domain/models/product';
+import { ProductService } from '../../../products/infrastructure/services/product.service';
+import { ProductSale } from '../../domain/model/product-sale';
+import { Sale } from '../../domain/model/sale';
+import { SaleService } from '../../infrastructure/services/sale.service';
 import { CreateSaleRequest } from '../requests/createSaleRequest';
-import { Product } from './../../../products/domain/models/product';
-import { ProductService } from './../../../products/infrastructure/services/product.service';
-import { ProductSale } from './../../domain/model/product-sale';
-import { Sale } from './../../domain/model/sale';
-import { SaleService } from './../../infrastructure/services/sale.service';
 
 @Injectable()
-export class SaveSale {
+export class CreateSale {
   constructor(
     private readonly saleService: SaleService,
     private readonly productService: ProductService,

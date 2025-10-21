@@ -18,7 +18,7 @@ export interface CategoryRepository {
    * @param category - category to create
    * @param userId - id of the user creating the category
    */
-  create(category: Category, userId: string): Promise<Category>;
+  save(category: Category, userId: string): Promise<Category>;
 
   /**
    * Updates an existing category.

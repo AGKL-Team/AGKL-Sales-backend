@@ -4,6 +4,7 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { AuthModule } from '../core/auth/auth.module';
 import { DatabaseModule } from '../core/database/database.module';
 import { Brand } from './domain/models/brand';
+import { BrandCategory } from './domain/models/brand-category';
 import { Category } from './domain/models/category';
 import { Product } from './domain/models/product';
 import { ProductImage } from './domain/models/productImages';
@@ -17,10 +18,16 @@ import { ProductModuleUseCases } from './providers/productUseCasesProvider';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Brand, Product, ProductImage, Category]),
     DatabaseModule,
     AuthModule,
     CloudinaryModule,
+    TypeOrmModule.forFeature([
+      Brand,
+      Product,
+      ProductImage,
+      Category,
+      BrandCategory,
+    ]),
   ],
   controllers: [BrandController, CategoryController, ProductController],
   providers: [
@@ -30,6 +37,6 @@ import { ProductModuleUseCases } from './providers/productUseCasesProvider';
     CategoryService,
     ...ProductModuleUseCases,
   ],
-  exports: [],
+  exports: [ProductService],
 })
 export class ProductModule {}

@@ -25,9 +25,12 @@ export class CreateCategory {
       );
 
     // 3. Crea la categoría
-    const category = Category.create(name, brand);
-    await this.categoryService.create(category, userId);
+    const category = Category.create(name);
+    brand.addCategory(category);
 
     brand.addCategory(category);
+
+    await this.categoryService.save(category, userId);
+    await this.brandService.update(brand, userId);
   }
 }

@@ -36,15 +36,24 @@ export class ProductController {
 
   @Get('')
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query('request') request: ProductFilters) {
+  async findAll(@Query('request') request?: ProductFilters) {
     return this.productService.findAll(request);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async findById(
+    @Param('id', new ValidationPipe({ transform: true })) id: number,
+  ) {
+    return this.productService.findById(id);
   }
 
   @Post('')
   @UseInterceptors(FilesInterceptor('images', 5))
   @HttpCode(HttpStatus.CREATED)
   async save(
-    @Body(ValidationPipe) request: CreateProductRequest,
+    @Body(ValidationPipe)
+    request: CreateProductRequest,
     @UploadedFiles() images: Express.Multer.File[],
     @UserFromRequest() user: User,
   ) {

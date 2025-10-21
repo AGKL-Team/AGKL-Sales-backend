@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
+import { BrandCategory } from './brand-category';
 import { Category } from './category';
 
 @Entity('brands')
@@ -19,8 +20,11 @@ export class Brand implements Auditory {
   @Column('varchar', { length: 150, nullable: false })
   logoId: string;
 
-  @OneToMany(() => Category, (category) => category.brand)
-  categories: Category[];
+  @OneToMany(() => BrandCategory, (brandCategory) => brandCategory.brand, {
+    cascade: true,
+    eager: true,
+  })
+  categories: BrandCategory[];
 
   @Column('timestamptz')
   createdAt: Date;
@@ -93,13 +97,8 @@ export class Brand implements Auditory {
       this.categories = [];
     }
 
-    if (
-      !this.categories.find(
-        (c) => c.name.toLowerCase() === category.name.toLowerCase(),
-      )
-    ) {
-      this.categories.push(category);
-      category.brand = this;
+    if (!this.categories.find((c) => c.category.id === category.id)) {
+      this.categories.push(BrandCategory.create(this, category));
     }
   }
 
@@ -112,6 +111,8 @@ export class Brand implements Auditory {
       return;
     }
 
-    this.categories = this.categories.filter((c) => c.id !== category.id);
+    this.categories = this.categories.filter(
+      (c) => c.category.id !== category.id,
+    );
   }
 }

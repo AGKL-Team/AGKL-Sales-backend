@@ -11,6 +11,7 @@ import { BrandService } from '../../../src/module/products/infrastructure/servic
 import { BrandController } from '../../../src/module/products/presentation/api/brand.controller';
 import { fakeApplicationUser } from '../../shared/fakes/user.fake';
 import { SupabaseTestProvider } from '../../shared/providers/supabase-config-test.provider';
+import { BrandCategory } from './../../../src/module/products/domain/models/brand-category';
 
 describe('BrandController', () => {
   let controller: BrandController;
@@ -30,6 +31,7 @@ describe('BrandController', () => {
         CreateBrandUseCase,
         UpdateBrandUseCase,
         { provide: getRepositoryToken(Brand), useClass: Repository },
+        { provide: getRepositoryToken(BrandCategory), useClass: Repository },
         SupabaseTestProvider,
         Logger,
       ],

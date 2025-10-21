@@ -1,4 +1,5 @@
 import { Brand } from '../models/brand';
+import { Category } from '../models/category';
 
 export interface BrandRepository {
   findAll(): Promise<Brand[]>;
@@ -9,4 +10,6 @@ export interface BrandRepository {
   delete(id: number, userId: string): Promise<void>;
 
   nameIsDuplicated(name: string): Promise<boolean>;
+
+  saveCategory(brand: Brand, category: Category): Promise<void>;
 }

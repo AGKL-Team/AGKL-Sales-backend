@@ -10,6 +10,7 @@ import { BrandService } from '../../../src/module/products/infrastructure/servic
 import { fakeImage } from '../../shared/fakes/image.fake';
 import { fakeApplicationUser } from '../../shared/fakes/user.fake';
 import { CreateBrandRequest } from './../../../src/module/products/application/requests/createBrandRequest';
+import { BrandCategory } from './../../../src/module/products/domain/models/brand-category';
 
 describe('CreateBrandUseCase', () => {
   let brandService: BrandService;
@@ -31,6 +32,10 @@ describe('CreateBrandUseCase', () => {
         BrandService,
         {
           provide: getRepositoryToken(Brand),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(BrandCategory),
           useClass: Repository,
         },
         Logger,

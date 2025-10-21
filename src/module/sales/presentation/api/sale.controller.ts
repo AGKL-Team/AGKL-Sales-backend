@@ -10,15 +10,15 @@ import {
 } from '@nestjs/common';
 import { User } from '@supabase/supabase-js';
 import { UserFromRequest } from 'module/core/auth/infrastructure/decorators/user.decorator';
+import { CreateSale } from '../../application/useCases/createSaleUseCase';
 import { SaleService } from '../../infrastructure/services/sale.service';
 import { CreateSaleRequest } from './../../application/requests/createSaleRequest';
-import { SaveSale } from './../../application/useCases/saveSaleUseCase';
 
 @Controller('sales')
 export class SaleController {
   constructor(
     private readonly saleService: SaleService,
-    private readonly saveSale: SaveSale,
+    private readonly saveSale: CreateSale,
   ) {}
 
   @Get()

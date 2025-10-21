@@ -13,11 +13,11 @@ export class ProductService implements ProductRepository {
     private readonly repository: Repository<Product>,
   ) {}
 
-  async findAll(filters: ProductFilters): Promise<Product[]> {
+  async findAll(filters?: ProductFilters): Promise<Product[]> {
     // 1. Pagination logic
     let take: number;
     let skip: number;
-    if (filters.size && filters.page) {
+    if (filters?.size && filters?.page) {
       take = filters.size;
       skip = (filters.page - 1) * filters.size;
     } else {
@@ -28,19 +28,25 @@ export class ProductService implements ProductRepository {
     // 2. Dynamic filtering
     return await this.repository.find({
       where: {
-        ...(filters.name && { name: filters.name }),
-        ...(filters.categoryId && { categoryId: filters.categoryId }),
-        ...(filters.brandId && { brandId: filters.brandId }),
-        ...(filters.minPrice && { price: LessThanOrEqual(filters.minPrice) }),
-        ...(filters.maxPrice && { price: MoreThanOrEqual(filters.maxPrice) }),
+        ...(filters?.name && { name: filters.name }),
+        ...(filters?.categoryId && { categoryId: filters.categoryId }),
+        ...(filters?.brandId && { brandId: filters.brandId }),
+        ...(filters?.minPrice && { price: LessThanOrEqual(filters.minPrice) }),
+        ...(filters?.maxPrice && { price: MoreThanOrEqual(filters.maxPrice) }),
       },
       take,
       skip,
+      relations: {
+        images: true,
+      },
     });
   }
 
   async findById(id: number): Promise<Product> {
-    const product = await this.repository.findOne({ where: { id } });
+    const product = await this.repository.findOne({
+      where: { id },
+      relations: { images: true },
+    });
     if (!product) {
       throw new NotFoundException('No se encuentra el producto');
     }

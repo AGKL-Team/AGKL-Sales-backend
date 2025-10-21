@@ -1,8 +1,9 @@
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
 import { Product } from './../../../products/domain/models/product';
 import { ProductSale } from './product-sale';
 
+@Entity('sales')
 export class Sale implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,7 +14,7 @@ export class Sale implements Auditory {
   @Column('timestamptz')
   date: Date;
 
-  @OneToMany(() => ProductSale, (product) => product.sale, {
+  @OneToMany(() => ProductSale, (productSale) => productSale.sale, {
     eager: true,
     cascade: true,
   })

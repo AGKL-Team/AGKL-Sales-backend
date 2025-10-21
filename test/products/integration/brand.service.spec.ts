@@ -6,6 +6,7 @@ import { SupabaseService } from '../../../src/module/core/database/services/supa
 import { BrandService } from '../../../src/module/products/infrastructure/services/brand.service';
 import { ConfigTestProvider } from '../../shared/providers/config-test.provider';
 import { Brand } from './../../../src/module/products/domain/models/brand';
+import { BrandCategory } from './../../../src/module/products/domain/models/brand-category';
 
 describe('BrandService', () => {
   let service: BrandService;
@@ -42,6 +43,7 @@ describe('BrandService', () => {
       providers: [
         BrandService,
         { provide: getRepositoryToken(Brand), useClass: Repository },
+        { provide: getRepositoryToken(BrandCategory), useClass: Repository },
         { provide: SupabaseService, useValue: supabaseService },
         ConfigTestProvider,
       ],
