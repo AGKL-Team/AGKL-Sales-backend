@@ -61,11 +61,12 @@ export class ProductSale implements Auditory {
    * @param quantity The quantity of the product to add.
    * @returns A new instance of ProductSale.
    */
-  static create(product: Product, quantity: number) {
+  static create(product: Product, quantity: number, sale: Sale): ProductSale {
     const productSale = new ProductSale();
     productSale.product = product;
     productSale.quantity = quantity;
     productSale.unitPrice = product.price;
+    productSale.sale = sale;
     return productSale;
   }
 }

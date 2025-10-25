@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { SaleRepository } from '../../domain/repository/saleRepository';
@@ -43,6 +39,11 @@ export class SaleService implements SaleRepository {
     sale.createdAt = new Date();
     sale.createdBy = userId;
 
+    for (const product of sale.products) {
+      product.createdAt = new Date();
+      product.createdBy = userId;
+    }
+
     return await this.repository.save(sale);
   }
 
@@ -71,17 +72,18 @@ export class SaleService implements SaleRepository {
   }
 
   async getNextNumber(): Promise<number> {
-    const lastSale = await this.repository.findOne({
+    const sales = await this.repository.find({
       order: {
         number: 'DESC',
       },
-      select: ['number'],
+      take: 1,
     });
 
-    if (!lastSale)
-      throw new BadRequestException(
-        'Ocurrió un error al recuperar el próximo número para la venta',
-      );
+    console.info(sales);
+
+    const lastSale = sales[0];
+
+    if (!lastSale) return 1;
 
     return lastSale.number + 1;
   }

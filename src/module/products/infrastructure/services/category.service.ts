@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { BrandCategory } from '../../domain/models/brand-category';
 import { Category } from '../../domain/models/category';
 import { CategoryRepository } from '../../domain/repositories/categoryRepository';
@@ -68,5 +68,16 @@ export class CategoryService implements CategoryRepository {
     });
 
     return !!category;
+  }
+
+  async findAll(): Promise<Category[]> {
+    const categories = await this.categoryRepository.find({
+      where: { deletedAt: IsNull() },
+    });
+    if (!categories) {
+      return [];
+    }
+
+    return categories;
   }
 }

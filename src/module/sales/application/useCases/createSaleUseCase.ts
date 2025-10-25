@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Product } from '../../../products/domain/models/product';
 import { ProductService } from '../../../products/infrastructure/services/product.service';
-import { ProductSale } from '../../domain/model/product-sale';
 import { Sale } from '../../domain/model/sale';
 import { SaleService } from '../../infrastructure/services/sale.service';
 import { CreateSaleRequest } from '../requests/createSaleRequest';
@@ -17,23 +16,16 @@ export class CreateSale {
     // 1. Get the next number
     const nextNumber = await this.saleService.getNextNumber();
 
-    // 2. Get every product associate to sale
-    const products: ProductSale[] = [];
+    // 3. Create the sale
+    const sale = Sale.create(nextNumber, new Date());
+
+    // 4. Associates the items to sale
     for (const item of request.products) {
       const product: Product = await this.productService.findById(
         item.productId,
       );
 
-      const productSale = ProductSale.create(product, item.quantity);
-      products.push(productSale);
-    }
-
-    // 3. Create the sale
-    const sale = Sale.create(nextNumber, new Date());
-
-    // 4. Associates the items to sale
-    for (const item of products) {
-      sale.addProduct(item.product, item.quantity);
+      sale.addProduct(product, item.quantity);
     }
 
     // 5. Ensure the items was assigned and has a product

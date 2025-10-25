@@ -39,7 +39,11 @@ export class Sale implements Auditory {
    * @param quantity The quantity of the product to add.
    */
   addProduct(product: Product, quantity: number) {
-    const productSale = ProductSale.create(product, quantity);
+    if (!this.products) {
+      this.products = [];
+    }
+
+    const productSale = ProductSale.create(product, quantity, this);
     this.products.push(productSale);
   }
 

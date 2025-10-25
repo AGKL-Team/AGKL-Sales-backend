@@ -38,6 +38,8 @@ export class ProductService implements ProductRepository {
       skip,
       relations: {
         images: true,
+        category: true,
+        brand: true,
       },
     });
   }
@@ -45,8 +47,9 @@ export class ProductService implements ProductRepository {
   async findById(id: number): Promise<Product> {
     const product = await this.repository.findOne({
       where: { id },
-      relations: { images: true },
+      relations: { images: true, category: true, brand: true },
     });
+
     if (!product) {
       throw new NotFoundException('No se encuentra el producto');
     }

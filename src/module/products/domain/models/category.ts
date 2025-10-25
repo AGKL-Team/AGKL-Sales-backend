@@ -11,8 +11,7 @@ export class Category implements Auditory {
   name: string;
 
   @OneToMany(() => BrandCategory, (brandCategory) => brandCategory.category, {
-    cascade: true,
-    eager: true,
+    cascade: false,
   })
   brands: BrandCategory[];
 

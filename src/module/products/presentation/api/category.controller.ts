@@ -30,10 +30,17 @@ export class CategoryController {
   @Get('brand/:brandId')
   @HttpCode(HttpStatus.OK)
   @UseGuards(SupabaseAuthGuard)
-  async getAll(
+  async getAllByBrand(
     @Param('brandId', new ValidationPipe({ transform: true })) brandId: number,
   ) {
     return await this.service.findAllForBrand(brandId);
+  }
+
+  @Get('')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(SupabaseAuthGuard)
+  async getAll() {
+    return await this.service.findAll();
   }
 
   @Get(':id')

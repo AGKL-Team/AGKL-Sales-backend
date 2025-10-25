@@ -6,15 +6,18 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { User } from '@supabase/supabase-js';
 import { UserFromRequest } from 'module/core/auth/infrastructure/decorators/user.decorator';
 import { CreateSale } from '../../application/useCases/createSaleUseCase';
 import { SaleService } from '../../infrastructure/services/sale.service';
+import { SupabaseAuthGuard } from './../../../core/auth/infrastructure/guard/supabase-auth.guard';
 import { CreateSaleRequest } from './../../application/requests/createSaleRequest';
 
 @Controller('sales')
+@UseGuards(SupabaseAuthGuard)
 export class SaleController {
   constructor(
     private readonly saleService: SaleService,
