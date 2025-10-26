@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { SaleRepository } from '../../domain/repository/saleRepository';
+import { ProductService } from './../../../products/infrastructure/services/product.service';
 import { ProductSale } from './../../domain/model/product-sale';
 import { Sale } from './../../domain/model/sale';
 
@@ -12,14 +13,26 @@ export class SaleService implements SaleRepository {
     private readonly repository: Repository<Sale>,
     @InjectRepository(ProductSale)
     private readonly productSaleRepository: Repository<ProductSale>,
+    private readonly productService: ProductService,
   ) {}
 
   async findAll(): Promise<Sale[]> {
-    return await this.repository.find({
+    const sales = await this.repository.find({
       where: {
         deletedAt: IsNull(),
       },
+      relations: {
+        products: true,
+      },
     });
+
+    for (const sale of sales) {
+      for (const product of sale.products) {
+        product.product = await this.productService.findById(product.productId);
+      }
+    }
+
+    return sales;
   }
 
   async findById(id: number): Promise<Sale> {

@@ -97,7 +97,7 @@ export class Brand implements Auditory {
       this.categories = [];
     }
 
-    if (!this.categories.find((c) => c.category.id === category.id)) {
+    if (!this.categories.find((c) => c.categoryId === category.id)) {
       this.categories.push(BrandCategory.create(this, category));
     }
   }

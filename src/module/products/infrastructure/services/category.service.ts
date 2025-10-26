@@ -26,6 +26,7 @@ export class CategoryService implements CategoryRepository {
   async findAllForBrand(brandId: number): Promise<Category[]> {
     const brandCategories = await this.brandCategoryRepository.find({
       where: { brandId },
+      relations: { category: true },
     });
 
     return brandCategories.map((bc) => bc.category);

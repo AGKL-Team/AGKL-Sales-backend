@@ -37,7 +37,11 @@ export class ProductController {
   @Get('')
   @HttpCode(HttpStatus.OK)
   async findAll(@Query('request') request?: ProductFilters) {
-    return this.productService.findAll(request);
+    const products = await this.productService.findAll(request);
+    return products.map((product) => ({
+      ...product,
+      price: Number(product.price),
+    }));
   }
 
   @Get(':id')

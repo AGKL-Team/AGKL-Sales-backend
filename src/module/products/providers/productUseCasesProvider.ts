@@ -1,3 +1,4 @@
+import { AssociateCategoryToBrand } from '../application/useCases/associateCategoryToBrandUseCase';
 import { CreateBrandUseCase } from '../application/useCases/createBrandUseCase';
 import { CreateCategory } from '../application/useCases/createCategoryUseCase';
 import { CreateProduct } from '../application/useCases/createProductUseCase';
@@ -9,7 +10,11 @@ import { UploadProductImages } from '../application/useCases/uploadProductImages
 
 export const BrandUseCases = [CreateBrandUseCase, UpdateBrandUseCase];
 
-export const CategoryUseCases = [CreateCategory, UpdateCategory];
+export const CategoryUseCases = [
+  CreateCategory,
+  UpdateCategory,
+  AssociateCategoryToBrand,
+];
 
 export const ProductUseCases = [
   CreateProduct,

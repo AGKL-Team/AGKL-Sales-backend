@@ -54,7 +54,7 @@ export class BrandService implements BrandRepository {
 
     // 2. Save each category relation where the category is new
     for (const categoryRelation of brand.categories) {
-      if (!categoryRelation.category.id)
+      if (!categoryRelation.categoryId)
         await this.saveCategory(brand, categoryRelation.category);
     }
 

@@ -1,36 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { BrandService } from '../../infrastructure/services/brand.service';
+import { Injectable } from '@nestjs/common';
 import { CategoryService } from '../../infrastructure/services/category.service';
 import { CreateCategoryRequest } from '../requests/createCategoryRequest';
 import { Category } from './../../domain/models/category';
 
 @Injectable()
 export class CreateCategory {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly brandService: BrandService,
-  ) {}
+  constructor(private readonly categoryService: CategoryService) {}
 
-  async execute({ name, brandId }: CreateCategoryRequest, userId: string) {
-    // 1. Ensure the brand exists
-    const brand = await this.brandService.findById(brandId);
-
-    // 2. Ensure the name is unique by brand
-    const alreadyExists =
-      await this.categoryService.alreadyExistsCategoryByBrand(name, brandId);
-
-    if (alreadyExists)
-      throw new BadRequestException(
-        `Ya existe una categoría con el nombre ${name}`,
-      );
-
-    // 3. Crea la categoría
+  async execute({ name }: CreateCategoryRequest, userId: string) {
+    // 1. Crea la categoría
     const category = Category.create(name);
-    brand.addCategory(category);
-
-    brand.addCategory(category);
 
     await this.categoryService.save(category, userId);
-    await this.brandService.update(brand, userId);
   }
 }
