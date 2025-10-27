@@ -73,10 +73,11 @@ export class Sale implements Auditory {
   /**
    * Factory method to create an instance of Sale
    */
-  static create(number: number, date: Date): Sale {
+  static create(number: number, customer: Customer): Sale {
     const sale = new Sale();
     sale.number = number;
-    sale.date = date;
+    sale.date = new Date();
+    sale.customer = customer;
 
     return sale;
   }

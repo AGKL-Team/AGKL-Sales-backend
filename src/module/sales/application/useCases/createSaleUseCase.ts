@@ -4,17 +4,22 @@ import { ProductService } from '../../../products/infrastructure/services/produc
 import { Sale } from '../../domain/model/sale';
 import { SaleService } from '../../infrastructure/services/sale.service';
 import { CreateSaleRequest } from '../requests/createSaleRequest';
+import { CustomerService } from './../../../customers/infrastructure/services/customer.service';
 
 @Injectable()
 export class CreateSale {
   constructor(
     private readonly saleService: SaleService,
     private readonly productService: ProductService,
+    private readonly customerService: CustomerService,
   ) {}
 
   async execute(request: CreateSaleRequest, userId: string) {
     // 1. Get the next number
     const nextNumber = await this.saleService.getNextNumber();
+
+    // 2. Get the customer
+    const customer = await this.customerService.findById(request.customerId);
 
     // 3. Create the sale
     const sale = Sale.create(nextNumber, new Date());
