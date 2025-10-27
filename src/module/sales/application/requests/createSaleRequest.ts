@@ -1,12 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNumber, ValidateNested } from 'class-validator';
 import { CreateSaleProductsRequest } from './createSaleProductsRequest';
 
 export class CreateSaleRequest {
   @IsNumber()
   customerId: number;
-  @IsString()
-  sellerId: string;
   @IsNumber()
   totalAmount: number;
   @IsArray()
