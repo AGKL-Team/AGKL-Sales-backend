@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { ProductModule } from 'module/products/product.module';
+import { ProductModule } from '../module/products/product.module';
 import { CustomerModule } from './../module/customers/customer.module';
 
 import { AppController } from './app.controller';

@@ -16,9 +16,9 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { User } from '@supabase/supabase-js';
-import { ProductFilters } from 'module/products/domain/interfaces/productFilters';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
+import { ProductFilters } from '../../../products/domain/interfaces/productFilters';
 import { CreateProductRequest } from '../../application/requests/createProductRequest';
 import { UpdateProductRequest } from './../../application/requests/updateProductRequest';
 import { CreateProduct } from './../../application/useCases/createProductUseCase';

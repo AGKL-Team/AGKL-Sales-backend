@@ -1,6 +1,6 @@
-import { CloudinaryService } from 'module/cloudinary/services/cloudinary.service';
+import { CloudinaryService } from './../../../src/module/cloudinary/services/cloudinary.service';
 
-export const SupabaseTestProvider = {
+export const CloudinaryTestProvider = {
   provide: CloudinaryService,
   useValue: {
     uploadImage: jest.fn().mockResolvedValue({
