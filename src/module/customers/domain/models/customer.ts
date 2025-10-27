@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
+import { Sale } from './../../../sales/domain/model/sale';
 
 @Entity('customers')
 export class Customer implements Auditory {
@@ -11,6 +12,9 @@ export class Customer implements Auditory {
 
   @Column('varchar', { length: 50 })
   lastName: string;
+
+  @OneToMany(() => Sale, (sale) => sale.customer)
+  sales: Sale[];
 
   @Column('timestamptz')
   createdAt: Date;

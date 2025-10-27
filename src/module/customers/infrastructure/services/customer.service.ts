@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
+import { Sale } from './../../../sales/domain/model/sale';
 import { Customer } from './../../domain/models/customer';
 import { CustomerRepository } from './../../domain/repositories/customerRepositry';
 
@@ -9,6 +10,8 @@ export class CustomerService implements CustomerRepository {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Sale)
+    private readonly saleRepository: Repository<Sale>,
   ) {}
 
   async findAll(): Promise<Customer[]> {
@@ -51,8 +54,18 @@ export class CustomerService implements CustomerRepository {
   async delete(id: number, userId: string): Promise<void> {
     const customer = await this.findById(id);
 
-    if (!customer) {
-      throw new NotFoundException('No se encontró al cliente');
+    // Ensure if customer is associated with some sale
+    const associatedSales = await this.saleRepository.findOne({
+      where: {
+        customer: { id: id },
+        deletedAt: IsNull(),
+      },
+    });
+
+    if (associatedSales) {
+      throw new NotFoundException(
+        'Cannot delete customer associated with sales',
+      );
     }
 
     customer.deletedBy = userId;

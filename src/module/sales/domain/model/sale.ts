@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
+import { Customer } from './../../../customers/domain/models/customer';
 import { Product } from './../../../products/domain/models/product';
 import { ProductSale } from './product-sale';
 
@@ -19,6 +26,12 @@ export class Sale implements Auditory {
     cascade: true,
   })
   products: ProductSale[];
+
+  @Column('int')
+  customerId: number;
+
+  @ManyToOne(() => Customer, (customer) => customer.sales)
+  customer: Customer;
 
   @Column('timestamptz')
   createdAt: Date;
