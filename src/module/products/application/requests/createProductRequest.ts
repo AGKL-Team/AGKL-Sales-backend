@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
@@ -19,6 +20,7 @@ export class CreateProductRequest {
   })
   name: string;
 
+  @Type(() => Number)
   @IsString()
   @IsOptional()
   @MaxLength(255, {
@@ -26,6 +28,7 @@ export class CreateProductRequest {
   })
   description?: string;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   @Min(1, {
@@ -33,6 +36,7 @@ export class CreateProductRequest {
   })
   brandId: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   @Min(1, {
@@ -40,6 +44,7 @@ export class CreateProductRequest {
   })
   categoryId?: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   @Min(1, {
@@ -47,6 +52,7 @@ export class CreateProductRequest {
   })
   price: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   @Min(1, {
