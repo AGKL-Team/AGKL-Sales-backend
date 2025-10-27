@@ -14,10 +14,12 @@ import {
 import { User } from '@supabase/supabase-js';
 import { UserFromRequest } from '../../../core/auth/infrastructure/decorators/user.decorator';
 import { SupabaseAuthGuard } from '../../../core/auth/infrastructure/guard/supabase-auth.guard';
+import { AssociateCategoryToBrandRequest } from '../../application/requests/associateCategoryToBrandRequest';
 import { CreateCategoryRequest } from '../../application/requests/createCategoryRequest';
 import { CreateCategory } from '../../application/useCases/createCategoryUseCase';
 import { UpdateCategory } from '../../application/useCases/updateCategoryUseCase';
 import { CategoryService } from '../../infrastructure/services/category.service';
+import { AssociateCategoryToBrand } from './../../application/useCases/associateCategoryToBrandUseCase';
 
 @Controller('categories')
 export class CategoryController {
@@ -25,15 +27,23 @@ export class CategoryController {
     private readonly service: CategoryService,
     private readonly createCategory: CreateCategory,
     private readonly updateCategory: UpdateCategory,
+    private readonly associateCategoryToBrand: AssociateCategoryToBrand,
   ) {}
 
   @Get('brand/:brandId')
   @HttpCode(HttpStatus.OK)
   @UseGuards(SupabaseAuthGuard)
-  async getAll(
+  async getAllByBrand(
     @Param('brandId', new ValidationPipe({ transform: true })) brandId: number,
   ) {
     return await this.service.findAllForBrand(brandId);
+  }
+
+  @Get('')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(SupabaseAuthGuard)
+  async getAll() {
+    return await this.service.findAll();
   }
 
   @Get(':id')
@@ -52,8 +62,18 @@ export class CategoryController {
     @Body(ValidationPipe) request: CreateCategoryRequest,
     @UserFromRequest() user: User,
   ) {
-    const { name, brandId } = request;
-    return await this.createCategory.execute({ name, brandId }, user.id);
+    const { name } = request;
+    return await this.createCategory.execute({ name }, user.id);
+  }
+
+  @Post('associate-brand')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(SupabaseAuthGuard)
+  async associate(
+    @Body(ValidationPipe) request: AssociateCategoryToBrandRequest,
+  ) {
+    const { categoryId, brandId } = request;
+    await this.associateCategoryToBrand.execute(categoryId, brandId);
   }
 
   @Patch(':id')

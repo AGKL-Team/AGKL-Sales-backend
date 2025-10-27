@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigurationModule } from '../../../config/configuration.module';
 import { DatabaseModule } from '../database/database.module';
-import { SupabaseService } from '../database/services/supabase.service';
 import { SupabaseAuthGuard } from './infrastructure/guard/supabase-auth.guard';
 import { AuthService } from './infrastructure/services/auth.service';
 import { AuthController } from './presentation/api/auth.controller';
@@ -17,7 +16,7 @@ import { AuthController } from './presentation/api/auth.controller';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, SupabaseService, SupabaseAuthGuard],
+  providers: [AuthService, SupabaseAuthGuard],
   exports: [AuthService, JwtModule, SupabaseAuthGuard],
 })
 export class AuthModule {}

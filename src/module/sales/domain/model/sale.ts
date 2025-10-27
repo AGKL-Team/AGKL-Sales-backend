@@ -1,8 +1,9 @@
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Auditory } from './../../../../../core/auth/domain/interfaces/auditory';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
 import { Product } from './../../../products/domain/models/product';
 import { ProductSale } from './product-sale';
 
+@Entity('sales')
 export class Sale implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,7 +14,7 @@ export class Sale implements Auditory {
   @Column('timestamptz')
   date: Date;
 
-  @OneToMany(() => ProductSale, (product) => product.sale, {
+  @OneToMany(() => ProductSale, (productSale) => productSale.sale, {
     eager: true,
     cascade: true,
   })
@@ -38,6 +39,10 @@ export class Sale implements Auditory {
    * @param quantity The quantity of the product to add.
    */
   addProduct(product: Product, quantity: number) {
+    if (!this.products) {
+      this.products = [];
+    }
+
     const productSale = ProductSale.create(product, quantity, this);
     this.products.push(productSale);
   }
@@ -50,5 +55,16 @@ export class Sale implements Auditory {
     this.products = this.products.filter(
       (productSale) => productSale.productId !== productId,
     );
+  }
+
+  /**
+   * Factory method to create an instance of Sale
+   */
+  static create(number: number, date: Date): Sale {
+    const sale = new Sale();
+    sale.number = number;
+    sale.date = date;
+
+    return sale;
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
+import { BrandCategory } from '../../domain/models/brand-category';
 import { Category } from '../../domain/models/category';
 import { CategoryRepository } from '../../domain/repositories/categoryRepository';
 
@@ -9,6 +10,8 @@ export class CategoryService implements CategoryRepository {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(BrandCategory)
+    private readonly brandCategoryRepository: Repository<BrandCategory>,
   ) {}
 
   async findById(id: number): Promise<Category> {
@@ -20,13 +23,16 @@ export class CategoryService implements CategoryRepository {
     return category;
   }
 
-  async findAllForBrand(brandId: number) {
-    return await this.categoryRepository.find({
-      where: { brandId, deletedAt: IsNull() },
+  async findAllForBrand(brandId: number): Promise<Category[]> {
+    const brandCategories = await this.brandCategoryRepository.find({
+      where: { brandId },
+      relations: { category: true },
     });
+
+    return brandCategories.map((bc) => bc.category);
   }
 
-  async create(category: Category, userId: string): Promise<Category> {
+  async save(category: Category, userId: string): Promise<Category> {
     category.createdAt = new Date();
     category.createdBy = userId;
 
@@ -50,10 +56,29 @@ export class CategoryService implements CategoryRepository {
   }
 
   async alreadyExistsCategoryByBrand(name: string, brandId: number) {
-    const category = await this.categoryRepository.findOne({
-      where: { name, brandId },
+    const category = await this.brandCategoryRepository.findOne({
+      where: {
+        brandId,
+        category: {
+          name,
+        },
+      },
+      relations: {
+        category: true,
+      },
     });
 
     return !!category;
+  }
+
+  async findAll(): Promise<Category[]> {
+    const categories = await this.categoryRepository.find({
+      where: { deletedAt: IsNull() },
+    });
+    if (!categories) {
+      return [];
+    }
+
+    return categories;
   }
 }

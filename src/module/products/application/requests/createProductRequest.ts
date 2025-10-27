@@ -42,14 +42,14 @@ export class CreateProductRequest {
 
   @IsNumber()
   @IsNotEmpty()
-  @Min(0, {
+  @Min(1, {
     message: 'El precio debe ser un número positivo',
   })
   price: number;
 
   @IsNumber()
   @IsOptional()
-  @Min(0, {
+  @Min(1, {
     message: 'El stock inicial debe ser un número positivo o cero',
   })
   initialStock?: number;

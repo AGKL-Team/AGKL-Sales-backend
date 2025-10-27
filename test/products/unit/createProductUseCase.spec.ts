@@ -19,6 +19,7 @@ import { CloudinaryModule } from './../../../src/module/cloudinary/cloudinary.mo
 import { CloudinaryService } from './../../../src/module/cloudinary/services/cloudinary.service';
 import { CreateProduct } from './../../../src/module/products/application/useCases/createProductUseCase';
 import { Brand } from './../../../src/module/products/domain/models/brand';
+import { BrandCategory } from './../../../src/module/products/domain/models/brand-category';
 import { Category } from './../../../src/module/products/domain/models/category';
 import { Product } from './../../../src/module/products/domain/models/product';
 import { ProductImage } from './../../../src/module/products/domain/models/productImages';
@@ -59,6 +60,10 @@ describe('CreateProductUseCase', () => {
         },
         {
           provide: getRepositoryToken(Category),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(BrandCategory),
           useClass: Repository,
         },
         Logger,

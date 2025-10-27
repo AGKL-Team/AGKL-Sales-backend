@@ -5,7 +5,7 @@ import { SupabaseConfig } from '../../../../config/supabase.config';
 
 @Injectable()
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  private readonly supabase: SupabaseClient;
 
   constructor(private readonly configService: ConfigService) {
     const supabaseConfig = this.configService.get<SupabaseConfig>('supabase');

@@ -1,8 +1,15 @@
-import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Auditory } from './../../../core/auth/domain/interfaces/auditory';
 import { Product } from './../../../products/domain/models/product';
 import { Sale } from './sale';
 
+@Entity('product_sales')
 export class ProductSale implements Auditory {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,13 +23,15 @@ export class ProductSale implements Auditory {
   @Column('int')
   productId: number;
 
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.productSales)
+  @JoinColumn({ name: 'productId' })
   product: Product;
 
   @Column('int')
   saleId: number;
 
   @ManyToOne(() => Sale, (sale) => sale.products)
+  @JoinColumn({ name: 'saleId' })
   sale: Sale;
 
   @Column('timestamptz')
@@ -50,10 +59,9 @@ export class ProductSale implements Auditory {
    * Creates a new instance of ProductSale.
    * @param product The product to add to the sale.
    * @param quantity The quantity of the product to add.
-   * @param sale The sale to which the product belongs.
    * @returns A new instance of ProductSale.
    */
-  static create(product: Product, quantity: number, sale: Sale) {
+  static create(product: Product, quantity: number, sale: Sale): ProductSale {
     const productSale = new ProductSale();
     productSale.product = product;
     productSale.quantity = quantity;

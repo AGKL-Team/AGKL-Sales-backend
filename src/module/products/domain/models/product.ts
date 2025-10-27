@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Auditory } from '../../../core/auth/domain/interfaces/auditory';
+import { ProductSale } from './../../../sales/domain/model/product-sale';
 import { Brand } from './brand';
 import { Category } from './category';
 import { ProductImage } from './productImages';
@@ -44,6 +45,9 @@ export class Product implements Auditory {
 
   @ManyToOne(() => Category, (category) => category.id, { nullable: true })
   category: Category | null;
+
+  @OneToMany(() => ProductSale, (productSale) => productSale.product)
+  productSales: ProductSale[];
 
   @Column('timestamptz')
   createdAt: Date;
@@ -88,11 +92,12 @@ export class Product implements Auditory {
    * @throws Error if the category doesn't belong to the same brand as the product
    */
   assignCategory(category: Category): void {
-    if (category.brandId !== this.brandId) {
+    if (!category.brands.some((brand) => brand.id === this.brandId)) {
       throw new Error(
         'The category must belong to the same brand as the product',
       );
     }
+
     this.category = category;
     this.categoryId = category.id;
   }
