@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../core/auth/auth.module';
 import { DatabaseModule } from '../core/database/database.module';
 import { CustomerModule } from './../customers/customer.module';
+import { CustomerService } from './../customers/infrastructure/services/customer.service';
 import { Product } from './../products/domain/models/product';
 import { ProductService } from './../products/infrastructure/services/product.service';
 import { ProductModule } from './../products/product.module';
@@ -21,6 +22,12 @@ import { SaleModuleUseCases } from './providers/saleUseCasesProvider';
     CustomerModule,
   ],
   controllers: [SaleController],
-  providers: [Logger, SaleService, ProductService, ...SaleModuleUseCases],
+  providers: [
+    Logger,
+    CustomerService,
+    SaleService,
+    ProductService,
+    ...SaleModuleUseCases,
+  ],
 })
 export class SaleModule {}
