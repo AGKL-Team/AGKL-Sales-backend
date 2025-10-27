@@ -22,7 +22,7 @@ export class CreateSale {
     const customer = await this.customerService.findById(request.customerId);
 
     // 3. Create the sale
-    const sale = Sale.create(nextNumber, new Date());
+    const sale = Sale.create(nextNumber, customer);
 
     // 4. Associates the items to sale
     for (const item of request.products) {

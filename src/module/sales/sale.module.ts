@@ -2,6 +2,7 @@ import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../core/auth/auth.module';
 import { DatabaseModule } from '../core/database/database.module';
+import { CustomerModule } from './../customers/customer.module';
 import { Product } from './../products/domain/models/product';
 import { ProductService } from './../products/infrastructure/services/product.service';
 import { ProductModule } from './../products/product.module';
@@ -17,6 +18,7 @@ import { SaleModuleUseCases } from './providers/saleUseCasesProvider';
     DatabaseModule,
     AuthModule,
     ProductModule,
+    CustomerModule,
   ],
   controllers: [SaleController],
   providers: [Logger, SaleService, ProductService, ...SaleModuleUseCases],
