@@ -20,7 +20,6 @@ export class CreateProductRequest {
   })
   name: string;
 
-  @Type(() => Number)
   @IsString()
   @IsOptional()
   @MaxLength(255, {
